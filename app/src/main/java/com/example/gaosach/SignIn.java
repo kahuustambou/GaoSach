@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignIn extends AppCompatActivity {
 
     EditText edtEmail, edtPassword;
-    TextView notHaveAccount;
+    TextView notHaveAccount, forgotPassword;
     Button btnSignIn;
 
     //declare an instance of firebase
@@ -41,6 +41,7 @@ public class SignIn extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtEmail = findViewById(R.id.edtEmail);
         notHaveAccount = findViewById(R.id.nothave_account);
+        forgotPassword = findViewById(R.id.forgot_password);
         btnSignIn = findViewById(R.id.btnSignIn);
 
         mAuth= FirebaseAuth.getInstance();
@@ -86,6 +87,14 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignIn.this, SignUp.class));
+            }
+        });
+
+        // Navigate to ForgotPassword screen
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignIn.this, ForgotPassword.class));
             }
         });
 
