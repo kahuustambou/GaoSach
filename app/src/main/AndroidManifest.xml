@@ -11,8 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForgotPassword"></activity>
-        <activity android:name=".SignIn" />
+        <activity android:name=".SignIn"></activity>
         <activity android:name=".OrderStatus" />
         <activity android:name=".Cart" />
         <activity android:name=".RiceDetail" />

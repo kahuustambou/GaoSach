@@ -10,33 +10,23 @@ public class Request {
     private String status;
     private List<Order> rices;
 
-
     public Request() {
     }
 
-    public Request(String email, String name, String address, String total, List<Order> rices) {
+    public Request(String email, String name, String address, String total, String status, List<Order> rices) {
         this.email = email;
         this.name = name;
         this.address = address;
         this.total = total;
-        this.rices = rices;
-        this.status= "0"; //mac dinh 0: dat,1:nguoi giao
-        //
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
+        this.rices = rices;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String phone) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -62,6 +52,14 @@ public class Request {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<Order> getRices() {

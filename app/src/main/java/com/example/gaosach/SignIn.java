@@ -16,14 +16,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignIn extends AppCompatActivity {
 
-    EditText edtEmail, edtPassword;
-    TextView notHaveAccount, forgotPassword;
+    EditText edtEmail, edtPassword,edtPhone;
+    TextView notHaveAccount;
     Button btnSignIn;
 
     //declare an instance of firebase
@@ -41,19 +43,22 @@ public class SignIn extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtEmail = findViewById(R.id.edtEmail);
         notHaveAccount = findViewById(R.id.nothave_account);
-        forgotPassword = findViewById(R.id.forgot_password);
         btnSignIn = findViewById(R.id.btnSignIn);
 
         mAuth= FirebaseAuth.getInstance();
+        FirebaseDatabase database= FirebaseDatabase.getInstance();
+        final DatabaseReference table_user = database.getReference("User");
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String Email= edtEmail.getText().toString().trim();
                 String Password=edtPassword.getText().toString().trim();
-                if (Email.isEmpty()) {
-                    edtEmail.setError(getString(R.string.input_error_email));
-                    edtEmail.requestFocus();
+               if (Email.isEmpty()) {
+                   edtEmail.setError(getString(R.string.input_error_email));
+                   edtEmail.requestFocus();
                     return;
                 }
                 if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
@@ -75,7 +80,7 @@ public class SignIn extends AppCompatActivity {
                 }
                 else{
                     signInUser(Email,Password);
-                }
+              }
             }
         });
 
@@ -87,14 +92,6 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignIn.this, SignUp.class));
-            }
-        });
-
-        // Navigate to ForgotPassword screen
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignIn.this, ForgotPassword.class));
             }
         });
 
@@ -121,7 +118,7 @@ public class SignIn extends AppCompatActivity {
         //show pd
         mDialog.show();
 
-        mAuth.signInWithEmailAndPassword(Email, Password)
+        mAuth.signInWithEmailAndPassword(Email,Password)
                 .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -129,10 +126,12 @@ public class SignIn extends AppCompatActivity {
                             User user= new User(
                                     Email,
                                     Password
+
                             );
 
+
                             mDialog.dismiss();
-                            Toast.makeText(SignIn.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignIn.this,"Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SignIn.this,Home.class));
                             finish();
                         } else {

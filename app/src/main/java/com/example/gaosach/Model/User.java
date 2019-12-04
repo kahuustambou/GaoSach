@@ -1,16 +1,29 @@
 package com.example.gaosach.Model;
 
 public class User {
-   public String Name, Email,Phone;
+   public String Name, Email;
 
-    public User(String email, String password) {
+    public User() {
     }
 
-    public User(String name, String email, String phone) {
+    public User(String name, String email) {
         Name = name;
         Email = email;
-        Phone = phone;
     }
 
+    public String getName() {
+        return Name;
+    }
 
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
 }

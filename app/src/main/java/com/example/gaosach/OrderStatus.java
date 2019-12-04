@@ -2,6 +2,7 @@ package com.example.gaosach;
 
 import android.os.Bundle;
 
+import com.example.gaosach.Common.Common;
 import com.example.gaosach.Model.Request;
 import com.example.gaosach.ViewHolder.OrderViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -36,7 +37,7 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         
-//        loadOrders(Common.currentUser.Phone);
+        loadOrders(Common.currentUser.Email);
     }
 
 
@@ -54,7 +55,8 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
-                viewHolder.txtOrderPhone.setText(model.getEmail());
+//                viewHolder.txtOrderPhone.setText(model.getPhone());
+                viewHolder.txtOrderEmail.setText(model.getEmail());
 
             }
         };

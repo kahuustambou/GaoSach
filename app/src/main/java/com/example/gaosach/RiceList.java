@@ -182,7 +182,7 @@ public class RiceList extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(Rice.class,
                 R.layout.rice_item,
                 RiceViewHolder.class,
-                riceList.orderByChild("MenuId").equalTo(categoryId) //like: select* from rice
+                riceList.orderByChild("menuId").equalTo(categoryId) //like: select* from rice
                 ) {
             @Override
             protected void populateViewHolder(RiceViewHolder viewHolder, Rice model, int position) {

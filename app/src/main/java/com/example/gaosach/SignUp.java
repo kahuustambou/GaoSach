@@ -134,8 +134,8 @@ public class SignUp extends AppCompatActivity  implements View.OnClickListener{
                         if(task.isSuccessful()){
                             User user= new User(
                                     Name,
-                                    Email,
-                                    Phone
+                                    Email
+
                             );
                             FirebaseDatabase.getInstance().getReference("User")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

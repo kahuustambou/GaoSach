@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txtOrderId,txtOrderStatus,txtOrderPhone,txtOrderAddress;
+    public TextView txtOrderId,txtOrderStatus,txtOrderEmail,txtOrderAddress;
 
     private ItemClickListener itemClickListener;
 
@@ -21,7 +21,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderAddress=(TextView)itemView.findViewById(R.id.order_address);
         txtOrderId=(TextView)itemView.findViewById(R.id.order_id);
         txtOrderStatus=(TextView)itemView.findViewById(R.id.order_status);
-        txtOrderPhone=(TextView)itemView.findViewById(R.id.order_phone);
+        txtOrderEmail=(TextView)itemView.findViewById(R.id.order_email);
 
         itemView.setOnClickListener(this);
 
