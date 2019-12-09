@@ -28,6 +28,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.paperdb.Paper;
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //    private AppBarConfiguration mAppBarConfiguration;
@@ -53,6 +55,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
 
+        // Init Paper
+        Paper.init(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +163,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
         if (id == R.id.nav_menu) {
 
-        } else if (id == R.id.nav_cart) {
+        } else if (id == R.id.nav_profile) {
+            Intent profileIntent= new Intent(Home.this, Profile.class);
+            startActivity(profileIntent);
+
+        }else if (id == R.id.nav_cart) {
             Intent cartIntent= new Intent(Home.this, Cart.class);
             startActivity(cartIntent);
 
@@ -168,16 +176,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_signout) {
-            //signout
+            // Delete local user
+            Paper.book().destroy();
 
+            // Sign out
             Intent signIn= new Intent(Home.this,SignIn.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
-
-
-
-
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;

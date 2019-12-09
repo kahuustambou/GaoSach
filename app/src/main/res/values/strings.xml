@@ -19,8 +19,8 @@
     <string name="input_error_email">input_error_email</string>
     <string name="input_error_email_invalid">input_error_email_invalid</string>
     <string name="input_error_password">input_error_password</string>
-    <string name="input_error_password_length">input_error_password_length</string>
-    <string name="input_error_phone">input_error_phone</string>
-    <string name="input_error_phone_invalid">input_error_phone_invalid</string>
+    <string name="input_error_password_length">Password must have more than 6 characters</string>
+    <string name="input_error_phone">Phone number must not be null</string>
+    <string name="input_error_phone_invalid">Invalid phone number</string>
     <string name="signup_sucess">signup_sucess</string>
 </resources>

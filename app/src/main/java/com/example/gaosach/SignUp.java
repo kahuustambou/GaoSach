@@ -21,8 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SignUp extends AppCompatActivity  {
-    EditText edtPhone , edtPassword,edtName;
+public class SignUp extends AppCompatActivity {
+    EditText edtPhoneNumber, edtPassword, edtFullName;
 
     Button btnSignUp;
     TextView mHaveAccount;
@@ -46,45 +46,43 @@ public class SignUp extends AppCompatActivity  {
 //        actionBar.setDisplayShowHomeEnabled(true);
 
 
-        edtPhone =  findViewById(R.id.edtPhone);
-        edtPassword =  findViewById(R.id.edtPassword);
-        edtName= findViewById(R.id.edtName);
+        edtPhoneNumber = findViewById(R.id.edtPhone);
+        edtPassword = findViewById(R.id.edtPassword);
+        edtFullName = findViewById(R.id.edtName);
 //        edtEmail =  findViewById(R.id.edtEmail);
-        btnSignUp=  findViewById(R.id.btnSignUp);
-        mHaveAccount= findViewById(R.id.have_account);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        mHaveAccount = findViewById(R.id.have_account);
 
 //        mAuth= FirebaseAuth.getInstance();
 //        findViewById(R.id.btnSignUp).setOnClickListener(this);
-        final FirebaseDatabase database= FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("User");
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final ProgressDialog mDialog= new ProgressDialog(SignUp.this);
+                final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
                 mDialog.setMessage("Vui lòng đợi...");
                 mDialog.show();
 
                 table_user.addValueEventListener(new ValueEventListener() {
+                    String phoneNumber = edtPhoneNumber.getText().toString().trim();
+                    String fullName = edtFullName.getText().toString().trim();
+                    String password = edtPassword.getText().toString().trim();
+
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists())
-                        {
+                        if (dataSnapshot.child(phoneNumber).exists()) {
                             mDialog.dismiss();
-                            Toast.makeText(SignUp.this,"Số điện thoại đã được đăng ký",Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
+                            Toast.makeText(SignUp.this, "Số điện thoại đã được đăng ký", Toast.LENGTH_SHORT).show();
+                        } else {
                             mDialog.dismiss();
-                            User user= new User(edtName.getText().toString(),edtPassword.getText().toString());
-                            table_user.child(edtPhone.getText().toString()).setValue(user);
-                            Toast.makeText(SignUp.this,"Đăng ký thành công",Toast.LENGTH_SHORT).show();
+                            User user = new User(fullName, phoneNumber, password, false);
+                            table_user.child(phoneNumber).setValue(user);
+                            Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                             finish();
-
                         }
-
                     }
 
                     @Override
@@ -92,26 +90,16 @@ public class SignUp extends AppCompatActivity  {
 
                     }
                 });
-
             }
         });
-
-
-
-
 
         //handle signin text view
         mHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignUp.this,SignIn.class));
+                startActivity(new Intent(SignUp.this, SignIn.class));
             }
         });
-
-
-
-
-
     }
 
 //    @Override

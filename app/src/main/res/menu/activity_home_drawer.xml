@@ -10,6 +10,11 @@
             android:iconTint="@color/white"
             android:title="Trang chủ" />
         <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:iconTint="@color/white"
+            android:title="Profile" />
+        <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:iconTint="@color/white"
