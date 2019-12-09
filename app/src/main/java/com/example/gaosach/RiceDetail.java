@@ -90,14 +90,19 @@ public class RiceDetail extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentRice = dataSnapshot.getValue(Rice.class);
 
+
+//
                 //lay image
                 Picasso.with(getBaseContext()).load(currentRice .getImage())
                         .into(rice_image);
 
-                collapsingToolbarLayout.setTitle(currentRice .getName());
+                collapsingToolbarLayout.setTitle(currentRice.getName());
                 rice_price.setText(currentRice .getPrice());
                 rice_name.setText(currentRice .getName());
                 rice_description.setText(currentRice .getDescription());
+
+
+
             }
 
             @Override

@@ -3,31 +3,32 @@ package com.example.gaosach.Model;
 import java.util.List;
 
 public class Request {
-    private String email;
+    private String phone;
     private String name;
     private String address;
     private String total;
     private String status;
     private List<Order> rices;
 
+
     public Request() {
     }
 
-    public Request(String email, String name, String address, String total, String status, List<Order> rices) {
-        this.email = email;
+    public Request(String phone, String name, String address, String total,List<Order> rices) {
+        this.phone = phone;
         this.name = name;
         this.address = address;
         this.total = total;
-        this.status = status;
+        this.status = "0"; //defaute 0 place,1 shpping, 2 shipping
         this.rices = rices;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getName() {

@@ -56,37 +56,37 @@
         </com.google.android.material.textfield.TextInputEditText>
 
     </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/phone"
-        android:id="@+id/email"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_below="@+id/phone"-->
+<!--        android:id="@+id/email"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginLeft="10dp"-->
 
 
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtEmail"
-            android:background="@drawable/reg_edtext_style"
-            android:padding="18dp"
-            android:inputType="textEmailAddress"
-            android:hint="Nhập email..."
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+<!--        >-->
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/edtEmail"-->
+<!--            android:background="@drawable/reg_edtext_style"-->
+<!--            android:padding="18dp"-->
+<!--            android:inputType="textEmailAddress"-->
+<!--            android:hint="Nhập email..."-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
 
 
-        </com.google.android.material.textfield.TextInputEditText>
+<!--        </com.google.android.material.textfield.TextInputEditText>-->
 
-    </com.google.android.material.textfield.TextInputLayout>
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/text_input_password"
         app:errorEnabled="true"
-        android:layout_below="@+id/email"
+        android:layout_below="@+id/phone"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:passwordToggleEnabled="true"

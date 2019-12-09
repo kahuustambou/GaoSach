@@ -37,7 +37,7 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         
-        loadOrders(Common.currentUser.Email);
+        loadOrders(Common.currentUser.getPhone());
     }
 
 
@@ -46,7 +46,7 @@ public class OrderStatus extends AppCompatActivity {
                 Request.class,
                 R.layout.order_layout,
                 OrderViewHolder.class,
-                requests.orderByChild("Email")
+                requests.orderByChild("phone")
                 .equalTo(phone)
 
         ) {
@@ -56,7 +56,7 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
 //                viewHolder.txtOrderPhone.setText(model.getPhone());
-                viewHolder.txtOrderEmail.setText(model.getEmail());
+                viewHolder.txtOrderPhone.setText(model.getPhone());
 
             }
         };

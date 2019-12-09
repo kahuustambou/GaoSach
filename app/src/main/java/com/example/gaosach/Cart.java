@@ -2,13 +2,14 @@ package com.example.gaosach;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Request;
@@ -45,7 +46,6 @@ public class Cart extends AppCompatActivity {
 
         //firebase
         database= FirebaseDatabase.getInstance();
-//        database= FirebaseDatabase.getInstance().getReference().child("User").child("Phone");
         requests= database.getReference("Requests");
 
         //init
@@ -89,11 +89,11 @@ public class Cart extends AppCompatActivity {
                 // tao request moi
 
                 Request request = new Request(
-//                        Common.currentUser.getEmail(),
-//                        Common.currentUser.getName(),
-//                        edtAddress.getText().toString(),
-//                        txtTotalPrice.getText().toString(),
-//                        cart
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
+                        edtAddress.getText().toString(),
+                        txtTotalPrice.getText().toString(),
+                        cart
 
                 );
 
@@ -104,12 +104,8 @@ public class Cart extends AppCompatActivity {
                         .setValue(request);
 
                 //delete cart
-                try {
-                    new Database(getBaseContext()).cleanCart();
-                } catch (Exception exception) {
-                    Log.d("oineh", exception.getMessage());
-                }
-//                Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng",Toast.LENGTH_SHORT).show();
+                new Database(getBaseContext()).cleanCart();
+                Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng",Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

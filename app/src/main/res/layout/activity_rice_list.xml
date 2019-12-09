@@ -11,8 +11,9 @@ tools:context=".RiceList">
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mt_hint="Tìm kiếm thực phẩm..."
+        app:mt_hint="Tìm kiếm sản phẩm..."
         app:mt_speechMode="false"
+
 
         >
 

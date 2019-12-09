@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import com.example.gaosach.Interface.ItemClickListener;
@@ -33,10 +34,10 @@ public class RiceList extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference riceList;
 
+
+
     String categoryId="";
-    DatabaseReference databaseReference;
-
-
+   DatabaseReference databaseReference;
 
     FirebaseRecyclerAdapter<Rice, RiceViewHolder> adapter;
 
@@ -69,7 +70,7 @@ public class RiceList extends AppCompatActivity {
         }
         // search
         materialSearchBar= (MaterialSearchBar) findViewById(R.id.searchBar);
-        materialSearchBar.setHint("Tìm kiếm thực phẩm...");
+        materialSearchBar.setHint("Tìm kiếm sản phẩm...");
         loadSuggest(); //viet functiom để load sugest tu firebase
 
         materialSearchBar.setLastSuggestions(suggesList);
@@ -131,7 +132,7 @@ public class RiceList extends AppCompatActivity {
                 Rice.class,
                 R.layout.rice_item,
                 RiceViewHolder.class,
-                riceList.orderByChild("Name").equalTo(text.toString())
+                riceList.orderByChild("name").equalTo(text.toString()) //compare tên
         ) {
             @Override
             protected void populateViewHolder(RiceViewHolder viewHolder, Rice model, int position) {
@@ -158,14 +159,14 @@ public class RiceList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-        riceList.orderByChild("MenuId").equalTo(categoryId)
+        riceList.orderByChild("menuId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot postSnapshot:dataSnapshot.getChildren())
                         {
-//                            Rice item= postSnapshot.getValue(Rice.class);
-//                            suggesList.add(item.getName()); //add ten rice
+                            Rice item= postSnapshot.getValue(Rice.class);
+                            suggesList.add(item.getName()); //add ten rice
                             databaseReference = FirebaseDatabase.getInstance().getReference().child("Rices");
                         }
 
@@ -199,6 +200,7 @@ public class RiceList extends AppCompatActivity {
                         Intent riceDetail= new Intent(RiceList.this, RiceDetail.class);
                         riceDetail.putExtra("RiceId",adapter.getRef(position).getKey());
                         startActivity(riceDetail);
+//                        Toast.makeText(RiceList.this,""+local.getName(),Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -211,7 +213,7 @@ public class RiceList extends AppCompatActivity {
         };
 
         //set adapter
-//        Log.d("TAG",""+adapter.getItemCount());
+        Log.d("TAG",""+adapter.getItemCount());
         recyclerView.setAdapter(adapter);
     }
 }

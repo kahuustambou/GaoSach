@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.gaosach.Common.Common;
 import com.example.gaosach.Interface.ItemClickListener;
 import com.example.gaosach.Model.Category;
 import com.example.gaosach.ViewHolder.MenuViewHolder;
@@ -79,9 +80,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 //        NavigationUI.setupWithNavController(navigationView, navController);
 
 //        // set name for user
-//        View headerView = navigationView.getHeaderView(0);
-//        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
-//        txtFullName.setText(Common.currentUser.getName());
+        View headerView = navigationView.getHeaderView(0);
+        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
+        txtFullName.setText(Common.currentUser.getName());
         // load menu
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
         recycler_menu.setHasFixedSize(true);
@@ -111,6 +112,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                         //vi catagory la khoa nen  chung ta chi nhan khoa cua item
                         riceList.putExtra("CategoryId",adapter.getRef(position).getKey());
                         startActivity(riceList);
+//                        Toast.makeText(Home.this,""+ clickItem.getName(),Toast.LENGTH_SHORT).show();
 
 
 
@@ -167,6 +169,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         } else if (id == R.id.nav_signout) {
             //signout
+
+            Intent signIn= new Intent(Home.this,SignIn.class);
+            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(signIn);
 
 
 
