@@ -42,33 +42,33 @@
             android:text="full name"></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fullName"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/email"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/fullName"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginRight="10dp">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/reg_edtext_style"
-            android:inputType="textEmailAddress"
-            android:padding="18dp"
-            android:text="email@email.com">
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/edtEmail"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/reg_edtext_style"-->
+<!--            android:inputType="textEmailAddress"-->
+<!--            android:padding="18dp"-->
+<!--            android:text="email@email.com">-->
 
-        </com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
+<!--        </com.google.android.material.textfield.TextInputEditText>-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/email"
+        android:layout_below="@+id/fullName"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
@@ -79,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/reg_edtext_style"
-            android:inputType="textEmailAddress"
+            android:inputType="textPhonetic"
             android:padding="18dp"
             android:text="phone number">
 
@@ -87,7 +87,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnEdit"
+        android:id="@+id/btnUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/phoneNumber"
@@ -95,7 +95,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/reg_btnsignin"
-        android:text="Edit"
+        android:text="Save"
         android:textColor="@color/white"></Button>
 
 </RelativeLayout>

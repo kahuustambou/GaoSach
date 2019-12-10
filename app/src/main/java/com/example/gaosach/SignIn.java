@@ -32,13 +32,16 @@ import static com.example.gaosach.Common.Validator.isPhoneNumber;
 public class SignIn extends AppCompatActivity {
 
     EditText edtPhone, edtPassword;
-    TextView notHaveAccount, forgotPassword;
-    Button btnSignIn, btnProfile;
+    TextView notHaveAccount;
+    Button btnSignIn;
     TextView txtRememberMe;
-    private boolean isRemembered;
+    private boolean isRemembered, isClickedSignIn;
 
     //declare an instance of firebase
-    ProgressDialog mDialog;
+    private FirebaseDatabase database;
+    private DatabaseReference userReference;
+    private ValueEventListener signInEventListener;
+    private ProgressDialog mDialog;
 
 
     @Override
@@ -53,20 +56,15 @@ public class SignIn extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btnSignIn);
         txtRememberMe = findViewById(R.id.rememberMe);
         isRemembered = false;
+        isClickedSignIn = false;
 
         // Init Paper
         Paper.init(this);
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignIn.this, Profile.class));
-            }
-        });
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClickedSignIn = true;
                 String phoneNumber = edtPhone.getText().toString().trim();
                 String password = edtPassword.getText().toString().trim();
                 if (isEmpty(phoneNumber)) {
@@ -97,7 +95,7 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
-        //not have account
+        // Navigate to Sign Up screen if user does not have account
         notHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,35 +111,21 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
-//        //init prodialog
+        // Init dialog
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Đăng Nhập ...");
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        if(mAuth.getCurrentUser() !=null){
-//
-//
-//        }
-//    }
-
-    private String getUserKey(String email) {
-        return "";
-    }
-
     private void signIn(final String phoneNumber, final String password, final Context context) {
-        final ProgressDialog mDialog = new ProgressDialog(context);
+        mDialog = new ProgressDialog(context);
         mDialog.setMessage("Vui lòng đợi...");
         mDialog.show();
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference userTable = database.getReference("User");
+        database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("User");
 
-        userTable.addValueEventListener(new ValueEventListener() {
+        signInEventListener = userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if user exits
@@ -159,9 +143,12 @@ public class SignIn extends AppCompatActivity {
                             Paper.book().write(PASSWORD_KEY, password);
                         }
 
-                        // Navigate to Home
-                        startActivity(new Intent(context, Home.class));
-                        finish();
+                        if(isClickedSignIn) {
+                            // Navigate to Home
+                            userReference.removeEventListener(signInEventListener);
+                            startActivity(new Intent(context, Home.class));
+                            finish();
+                        }
                     } else {
                         Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
                     }
@@ -169,54 +156,20 @@ public class SignIn extends AppCompatActivity {
                     mDialog.dismiss();
                     Toast.makeText(context, "Người dùng không tồn tại", Toast.LENGTH_SHORT).show();
                 }
+
+                isClickedSignIn = false;
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
 
-//    private void signInUser(final String Email, final String Password) {
-//
-//
-//        //show pd
-//        mDialog.show();
-//
-//        mAuth.signInWithEmailAndPassword(Email,Password)
-//                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            User user= new User(
-//                                    Email,
-//                                    Password
-//
-//                            );
-//
-//
-//                            mDialog.dismiss();
-//                            Toast.makeText(SignIn.this,"Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(SignIn.this,Home.class));
-//                            finish();
-//                        } else {
-//                            mDialog.dismiss();
-//                            Toast.makeText(SignIn.this, "Đăng  nhập thất bại", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                mDialog.dismiss();
-//                //error get and show error meesage
-//                Toast.makeText(SignIn.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-//
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -224,15 +177,4 @@ public class SignIn extends AppCompatActivity {
 
         return super.onSupportNavigateUp();
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.btnSignIn:
-//                signInUser();
-//                break;
-//
-//        }
-//
-//    }
 }

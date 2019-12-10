@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,8 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import com.example.gaosach.Common.Common;
 import com.example.gaosach.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -91,13 +88,11 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.child(phoneNumber).exists()) {
                     // Get user information
                     mDialog.dismiss();
-                    Log.d("existUser", "ton tai user");
                     User user = dataSnapshot.child(phoneNumber).getValue(User.class);
 
                     if (user.getPassword().equals(password)) {
-                        Log.d("truoc", "truoc khi save current user");
                         // Save current user
-                        Common.currentUser = user;
+                        currentUser = user;
 
                         // Navigate to Home
                         startActivity(new Intent(context, Home.class));

@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,14 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.gaosach.Common.Common.currentUser;
-import static com.example.gaosach.Common.Validator.isEmail;
 import static com.example.gaosach.Common.Validator.isEmpty;
-import static com.example.gaosach.Common.Validator.isPassword;
 import static com.example.gaosach.Common.Validator.isPhoneNumber;
 
 public class Profile extends AppCompatActivity {
-    EditText edtFullName, edtEmail, edtPhoneNumber;
-    Button btnEdit;
+    EditText edtFullName, edtPhoneNumber;
+    Button btnUpdate;
     Typeface typeface;
     int contextCompat;
     DatabaseReference database;
@@ -40,51 +37,42 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        database = FirebaseDatabase.getInstance().getReference();
+        database = FirebaseDatabase.getInstance().getReference("User");
 
         typeface = Typeface.create("arial", Typeface.NORMAL);
         contextCompat = ContextCompat.getColor(this, R.color.black);
 
         edtFullName = findViewById(R.id.edtFullName);
-        edtEmail = findViewById(R.id.edtEmail);
         edtPhoneNumber = findViewById(R.id.edtPhoneNumber);
-        btnEdit = findViewById(R.id.btnEdit);
+        btnUpdate = findViewById(R.id.btnUpdate);
 
-        setEditable(false);
+        setUserInfo();
+//        setEditable(false);
 
-        btnEdit.setOnClickListener(new View.OnClickListener() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btnEdit.getText() == "Edit") {
-                    btnEdit.setText("Update");
-                    setEditable(true);
-                } else {
-//                    String email = edtEmail.getText().toString().trim();
-                    String fullName = edtFullName.getText().toString().trim();
-                    String phoneNumber = edtPhoneNumber.getText().toString().trim();
+                String fullName = edtFullName.getText().toString().trim();
+                String phoneNumber = edtPhoneNumber.getText().toString().trim();
+                Log.d("pwd", "onClick: " + currentUser.getPassword());
+                if (checkValidInputs(fullName, phoneNumber)) {
+                    try {
+                        User user = new User();
+                        user.setName(fullName);
+                        user.setPhone(phoneNumber);
 
-                    if (checkValidInputs(fullName, phoneNumber)) {
-                        try {
-                            User user = new User(
-                                    fullName, phoneNumber, null, false
-                            );
-
-                            updateUser(user);
-                        } catch (Exception exception) {
-                            Log.d("loineh", exception.getMessage());
-                        }
-
-                        btnEdit.setText("Edit");
-                        setEditable(false);
-                    } else {
-                        return;
+                        updateUser(user);
+                    } catch (Exception exception) {
+                        Log.d("loineh", exception.getMessage());
                     }
+
+                    setEditable(false);
                 }
             }
         });
     }
 
-    private void setTextView() {
+    private void setUserInfo() {
         edtFullName.setText(currentUser.getName());
         edtPhoneNumber.setText(currentUser.getPhone());
     }
@@ -92,7 +80,6 @@ public class Profile extends AppCompatActivity {
     private void setEditable(boolean isEnable) {
         edtFullName.setEnabled(isEnable);
         edtPhoneNumber.setEnabled(isEnable);
-        //        edtEmail.setEnabled(isEnable);
 
         setTextStyle();
     }
@@ -100,9 +87,6 @@ public class Profile extends AppCompatActivity {
     private void setTextStyle() {
         edtFullName.setTypeface(typeface);
         edtFullName.setTextColor(contextCompat);
-
-//        edtEmail.setTypeface(typeface);
-//        edtEmail.setTextColor(contextCompat);
 
         edtPhoneNumber.setTypeface(typeface);
         edtPhoneNumber.setTextColor(contextCompat);
@@ -126,8 +110,7 @@ public class Profile extends AppCompatActivity {
 
     public void updateUser(User user) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/User/" + currentUser.getPhone(), user.toMap());
-        database.child("User/" + currentUser.getPhone());
+        childUpdates.put(currentUser.getPhone(), user.toMap());
         database.updateChildren(childUpdates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -141,5 +124,8 @@ public class Profile extends AppCompatActivity {
                         Toast.makeText(Profile.this, "Failed", Toast.LENGTH_LONG).show();
                     }
                 });
+
+
+//        database.child(currentUser.getPhone()).setValue(user);
     }
 }

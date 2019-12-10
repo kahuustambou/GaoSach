@@ -7,18 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.gaosach.Common.Common;
-import com.example.gaosach.Interface.ItemClickListener;
-import com.example.gaosach.Model.Category;
-import com.example.gaosach.ViewHolder.MenuViewHolder;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +15,16 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gaosach.Interface.ItemClickListener;
+import com.example.gaosach.Model.Category;
+import com.example.gaosach.ViewHolder.MenuViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import io.paperdb.Paper;
 
@@ -38,7 +36,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView txtFullName;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
-    FirebaseAuth firebaseAuth;
 
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
@@ -62,8 +59,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent cartIntent= new Intent(Home.this,Cart.class);
-               startActivity(cartIntent);
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -85,10 +82,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 //        // set name for user
         View headerView = navigationView.getHeaderView(0);
-        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.currentUser.getName());
+        txtFullName = headerView.findViewById(R.id.txtFullName);
+//        Log.d("currentName", "onCreate: " + Common.currentUser.getName());
+//        txtFullName.setText(Common.currentUser.getName());
+
         // load menu
-        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+        recycler_menu = findViewById(R.id.recycler_menu);
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
@@ -105,19 +104,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 //                Picasso.get().load(model.getImage()).into(viewHolder.imageView);
 
 
-              Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.imageView);
                 final Category clickItem = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         // lay categoryid va gui activity moi
-                        Intent riceList = new Intent(Home.this,RiceList.class);
+                        Intent riceList = new Intent(Home.this, RiceList.class);
                         //vi catagory la khoa nen  chung ta chi nhan khoa cua item
-                        riceList.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        riceList.putExtra("CategoryId", adapter.getRef(position).getKey());
                         startActivity(riceList);
 //                        Toast.makeText(Home.this,""+ clickItem.getName(),Toast.LENGTH_SHORT).show();
-
 
 
                     }
@@ -126,12 +124,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             }
         };
+
         recycler_menu.setAdapter(adapter);
     }
 
+    private void navigateToWidget(Class widget) {
+        startActivity(new Intent(Home.this, widget));
+    }
 
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -139,7 +141,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,28 +165,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if (id == R.id.nav_menu) {
 
         } else if (id == R.id.nav_profile) {
-            Intent profileIntent= new Intent(Home.this, Profile.class);
-            startActivity(profileIntent);
+            navigateToWidget(Profile.class);
 
-        }else if (id == R.id.nav_cart) {
-            Intent cartIntent= new Intent(Home.this, Cart.class);
-            startActivity(cartIntent);
+        } else if (id == R.id.nav_cart) {
+            navigateToWidget(Cart.class);
 
         } else if (id == R.id.nav_order) {
-            Intent orderIntent= new Intent(Home.this, OrderStatus.class);
-            startActivity(orderIntent);
+            navigateToWidget(OrderStatus.class);
 
         } else if (id == R.id.nav_signout) {
             // Delete local user
             Paper.book().destroy();
 
             // Sign out
-            Intent signIn= new Intent(Home.this,SignIn.class);
+            Intent signIn = new Intent(Home.this, SignIn.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
     }
