@@ -60,16 +60,16 @@ public class SignUp extends AppCompatActivity {
                         if (dataSnapshot.child(phoneNumber).exists()) {
                             mDialog.dismiss();
                             Toast.makeText(SignUp.this, "Số điện thoại đã được đăng ký", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mDialog.dismiss();
+                            User user = new User(fullName, phoneNumber, password, false);
+                            userReference.child(phoneNumber).setValue(user);
+                            Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+
+                            userReference.removeEventListener(signUpEventListener);
+                            startActivity(new Intent(SignUp.this, SignIn.class));
+//                        finish();
                         }
-
-                        mDialog.dismiss();
-                        User user = new User(fullName, phoneNumber, password, false);
-                        userReference.child(phoneNumber).setValue(user);
-                        Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-
-                        userReference.removeEventListener(signUpEventListener);
-                        startActivity(new Intent(SignUp.this, SignIn.class));
-                        finish();
                     }
 
                     @Override

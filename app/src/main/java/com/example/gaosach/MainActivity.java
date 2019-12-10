@@ -94,9 +94,11 @@ public class MainActivity extends AppCompatActivity {
                         // Save current user
                         currentUser = user;
 
-                        // Navigate to Home
-                        startActivity(new Intent(context, Home.class));
-                        finish();
+                        if(!user.getIsStaff()) {
+                            // Navigate to Home
+                            startActivity(new Intent(context, Home.class));
+                            finish();
+                        }
                     } else {
                         Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
                     }

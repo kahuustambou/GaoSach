@@ -60,13 +60,13 @@ public class Profile extends AppCompatActivity {
                         User user = new User();
                         user.setName(fullName);
                         user.setPhone(phoneNumber);
-
+                        user.setPassword(currentUser.getPassword());
                         updateUser(user);
                     } catch (Exception exception) {
                         Log.d("loineh", exception.getMessage());
                     }
 
-                    setEditable(false);
+//                    setEditable(false);
                 }
             }
         });
@@ -110,7 +110,7 @@ public class Profile extends AppCompatActivity {
 
     public void updateUser(User user) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(currentUser.getPhone(), user.toMap());
+        childUpdates.put(user.getPhone(), user.toMap());
         database.updateChildren(childUpdates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -125,7 +125,8 @@ public class Profile extends AppCompatActivity {
                     }
                 });
 
-
-//        database.child(currentUser.getPhone()).setValue(user);
+        if(!user.getPhone().equals(currentUser.getPhone())) {
+            database.child(currentUser.getPhone()).setValue(null);
+        }
     }
 }
