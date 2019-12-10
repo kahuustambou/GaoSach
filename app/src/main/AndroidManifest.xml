@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gaosach">
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,6 +14,7 @@
         android:theme="@style/AppTheme">
         <!--    <activity android:name=".Profile" ></activity> -->
         <activity android:name=".Profile" />
+        <activity android:name=".Contact"></activity>
         <activity android:name=".ForgotPassword" />
         <activity android:name=".SignIn" />
         <activity android:name=".OrderStatus" />

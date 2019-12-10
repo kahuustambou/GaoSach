@@ -173,8 +173,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_order) {
             navigateToWidget(OrderStatus.class);
 
+        } else if (id == R.id.nav_contact) {
+            navigateToWidget(Contact.class);
         } else if (id == R.id.nav_signout) {
-            // Delete local user
+             // Delete local user
             Paper.book().destroy();
 
             // Sign out

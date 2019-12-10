@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:padding="16dp"
+    tools:context=".Cart">
+
+    <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="15dp"
+                android:text="Gạo Việt"
+                android:textColor="@color/btnSignUp"
+                android:textSize="40dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="125dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_dehaze_black_24dp" />
+
+            <TextView
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="100dp"
+                android:layout_toRightOf="@+id/imageView1"
+
+                android:paddingLeft="20dp"
+                android:text="Chuyên cung cấp các loại gạo, nếp, tấm, bột gạo chất lượng cao từ quê và nhập khẩu."
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="230dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_place_black_24dp" />
+
+            <TextView
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="230dp"
+                android:layout_toRightOf="@+id/imageView1"
+                android:paddingLeft="20dp"
+                android:text="79, Võ Văn Ngân, Linh Chiểu, Thủ Đức, Tp.HCM"
+                android:textSize="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="300dp"
+                android:text="Hãy liên hệ với chung tôi:"
+                android:textColor="@color/btnSignUp"
+                android:textSize="30dp"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/imageViewMessage"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="93dp"
+                android:layout_marginTop="370dp"
+                android:layout_marginRight="20dp"
+                android:paddingBottom="20dp"
+                android:src="@drawable/ic_sms_black_24dp" />
+
+            <ImageView
+                android:id="@+id/imageViewCall"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="235dp"
+                android:layout_marginTop="370dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/imageView1"
+                android:paddingBottom="20dp"
+                android:src="@drawable/ic_phone_black_24dp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
