@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Interface.ItemClickListener;
 import com.example.gaosach.Model.Category;
+import com.example.gaosach.Service.ListenOrder;
 import com.example.gaosach.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -90,6 +91,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setLayoutManager(layoutManager);
 
         loadMenu();
+
+        //đang kí service
+
+        Intent service= new Intent(Home.this, ListenOrder.class);
+        startService(service);
+
+
 
     }
 

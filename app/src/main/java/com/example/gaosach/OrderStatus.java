@@ -53,7 +53,7 @@ public class OrderStatus extends AppCompatActivity {
             @Override
             protected void populateViewHolder(OrderViewHolder viewHolder, Request model, int position) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
-                viewHolder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
 //                viewHolder.txtOrderPhone.setText(model.getPhone());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
@@ -64,13 +64,5 @@ public class OrderStatus extends AppCompatActivity {
 
     }
 
-    private String convertCodeToStatus(String status) {
-        if(status.equals("0"))
-            return "Đặt hàng";
-        else if(status.equals("1"))
-            return "Đang trên đường giao";
-        else
-            return "Giao hàng";
 
-    }
 }
