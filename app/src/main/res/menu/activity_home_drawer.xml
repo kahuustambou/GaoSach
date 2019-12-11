@@ -10,6 +10,11 @@
             android:iconTint="@color/white"
             android:title="Trang chủ" />
         <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:iconTint="@color/white"
+            android:title="Tài Khoản" />
+        <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:iconTint="@color/white"
@@ -19,6 +24,11 @@
             android:icon="@drawable/ic_schedule_black_24dp"
             android:iconTint="@color/white"
             android:title="Đơn hàng" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_perm_contact_calendar_black_24dp"
+            android:iconTint="@color/white"
+            android:title="Liên hệ" />
         <item
             android:id="@+id/nav_signout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"

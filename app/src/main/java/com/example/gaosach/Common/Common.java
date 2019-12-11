@@ -5,6 +5,7 @@ import com.example.gaosach.Model.User;
 public class Common {
     public static User currentUser;
 
+//<<<<<<< HEAD
 
     public static String convertCodeToStatus(String status) {
         if(status.equals("0"))
@@ -15,4 +16,8 @@ public class Common {
             return "Giao hàng";
 
     }
+//=======
+    public static final String USER_KEY = "User";
+    public static final String PASSWORD_KEY = "Password";
+//>>>>>>> 3d41be5112c10c44bff1f14cccd5de5f16b16629
 }

@@ -1,6 +1,7 @@
 package com.example.gaosach;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.Toast;
 
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Model.User;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,16 +21,27 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.paperdb.Paper;
+
+import static com.example.gaosach.Common.Common.PASSWORD_KEY;
+import static com.example.gaosach.Common.Common.USER_KEY;
+import static com.example.gaosach.Common.Validator.isEmpty;
+import static com.example.gaosach.Common.Validator.isPassword;
+import static com.example.gaosach.Common.Validator.isPhoneNumber;
+
 public class SignIn extends AppCompatActivity {
 
-    EditText edtPassword,edtPhone;
+    EditText edtPhone, edtPassword;
     TextView notHaveAccount;
     Button btnSignIn;
+    TextView txtRememberMe;
+    private boolean isRemembered, isClickedSignIn;
 
     //declare an instance of firebase
-
-        private FirebaseAuth mAuth;
-    ProgressDialog mDialog;
+    private FirebaseDatabase database;
+    private DatabaseReference userReference;
+    private ValueEventListener signInEventListener;
+    private ProgressDialog mDialog;
 
 
     @Override
@@ -38,99 +49,53 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-
         edtPassword = findViewById(R.id.edtPassword);
         edtPhone = findViewById(R.id.edtPhone);
 
-//        edtEmail = findViewById(R.id.edtEmail);
         notHaveAccount = findViewById(R.id.nothave_account);
         btnSignIn = findViewById(R.id.btnSignIn);
+        txtRememberMe = findViewById(R.id.rememberMe);
+        isRemembered = false;
+        isClickedSignIn = false;
 
-//        mAuth= FirebaseAuth.getInstance();
-        final FirebaseDatabase database= FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("User");
-
+        // Init Paper
+        Paper.init(this);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClickedSignIn = true;
+                String phoneNumber = edtPhone.getText().toString().trim();
+                String password = edtPassword.getText().toString().trim();
+                if (isEmpty(phoneNumber)) {
+                    edtPhone.setError(getString(R.string.input_error_phone));
+                    edtPhone.requestFocus();
+                    return;
+                }
 
-                final ProgressDialog mDialog= new ProgressDialog(SignIn.this);
-                mDialog.setMessage("Vui lòng đợi...");
-                mDialog.show();
+                if (!isPhoneNumber(phoneNumber)) {
+                    edtPhone.setError(getString(R.string.input_error_phone_invalid));
+                    edtPhone.requestFocus();
+                    return;
+                }
 
-//                String Email= edtEmail.getText().toString().trim();
-//                String Password=edtPassword.getText().toString().trim();
-//               if (Email.isEmpty()) {
-//                   edtEmail.setError(getString(R.string.input_error_email));
-//                   edtEmail.requestFocus();
-//                    return;
-//                }
-//                if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
-//                    edtEmail.setError(getString(R.string.input_error_email_invalid));
-//                    edtEmail.requestFocus();
-//                    return;
-//                }
-//
-//                if (Password.isEmpty()) {
-//                    edtPassword.setError(getString(R.string.input_error_password));
-//                    edtPassword.requestFocus();
-//                    return;
-//                }
-//
-//                if (Password.length() < 6) {
-//                    edtPassword.setError(getString(R.string.input_error_password_length));
-//                    edtPassword.requestFocus();
-//                    return;
-//                }
-//                else{
-//                    signInUser(Email,Password);
-//              }
+                if (isEmpty(password)) {
+                    edtPassword.setError(getString(R.string.input_error_password));
+                    edtPassword.requestFocus();
+                    return;
+                }
 
-                table_user.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //check if user not exits database
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists()) {
+                if (!isPassword(password)) {
+                    edtPassword.setError(getString(R.string.input_error_password_length));
+                    edtPassword.requestFocus();
+                    return;
+                }
 
-                            //get user information
-                            mDialog.dismiss();
-                            User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
-                            user.setPhone(edtPhone.getText().toString());
-                            if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                {
-                                    Intent homeIntent = new Intent(SignIn.this,Home.class);
-                                    Common.currentUser= user;
-                                    startActivity(homeIntent);
-                                    finish();
-                                }
-
-                            } else {
-                                Toast.makeText(SignIn.this, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else
-                        {
-                            mDialog.dismiss();
-                            Toast.makeText(SignIn.this,"Người dùng không tồn tại",Toast.LENGTH_SHORT).show();
-                        }
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                signIn(phoneNumber, password, SignIn.this);
             }
         });
 
-
-
-
-        //not have account
+        // Navigate to Sign Up screen if user does not have account
         notHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,80 +103,78 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
-//        //init prodialog
+        // Click remember me TextView
+        txtRememberMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isRemembered = !isRemembered;
+            }
+        });
+
+        // Init dialog
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Đăng Nhập ...");
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        if(mAuth.getCurrentUser() !=null){
-//
-//
-//        }
-//    }
+    private void signIn(final String phoneNumber, final String password, final Context context) {
+        mDialog = new ProgressDialog(context);
+        mDialog.setMessage("Vui lòng đợi...");
+        mDialog.show();
 
+        database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("User");
 
-//    private void signInUser(final String Email, final String Password) {
-//
-//
-//        //show pd
-//        mDialog.show();
-//
-//        mAuth.signInWithEmailAndPassword(Email,Password)
-//                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            User user= new User(
-//                                    Email,
-//                                    Password
-//
-//                            );
-//
-//
-//                            mDialog.dismiss();
-//                            Toast.makeText(SignIn.this,"Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(SignIn.this,Home.class));
-//                            finish();
-//                        } else {
-//                            mDialog.dismiss();
-//                            Toast.makeText(SignIn.this, "Đăng  nhập thất bại", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                mDialog.dismiss();
-//                //error get and show error meesage
-//                Toast.makeText(SignIn.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-//
-//    }
+        signInEventListener = userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if user exits
+                if (dataSnapshot.child(phoneNumber).exists()) {
+                    // Get user information
+                    mDialog.dismiss();
+                    User user = dataSnapshot.child(phoneNumber).getValue(User.class);
+
+                    if (user.getPassword().equals(password)) {
+                        // Save current user
+                        Common.currentUser = user;
+
+                        if (isRemembered) {
+                            Paper.book().write(USER_KEY, phoneNumber);
+                            Paper.book().write(PASSWORD_KEY, password);
+                        }
+
+                        if(isClickedSignIn) {
+                            // Navigate to Home
+                            userReference.removeEventListener(signInEventListener);
+                            startActivity(new Intent(context, Home.class));
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mDialog.dismiss();
+                    Toast.makeText(context, "Người dùng không tồn tại", Toast.LENGTH_SHORT).show();
+                }
+
+                isClickedSignIn = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
 
         return super.onSupportNavigateUp();
     }
-
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.btnSignIn:
-//                signInUser();
-//                break;
-//
-//        }
-//
-//    }
-
-
 }

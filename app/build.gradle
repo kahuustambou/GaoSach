@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "22.0.2"
     defaultConfig {
         applicationId "com.example.gaosach"
         minSdkVersion 24
@@ -56,7 +56,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:29.0.0'
     implementation 'com.android.support:design:29.0.0'
     implementation 'com.firebaseui:firebase-ui-database:1.2.0'
-
+    implementation 'com.mikhaellopez:circularimageview:4.1.0'
+    implementation 'io.paperdb:paperdb:2.6'
+    implementation 'com.github.rey5137:material:1.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -6,85 +6,70 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.gaosach.Model.User;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-public class SignUp extends AppCompatActivity  {
-    EditText edtPhone , edtPassword,edtName;
-
+public class SignUp extends AppCompatActivity {
+    EditText edtPhoneNumber, edtPassword, edtFullName;
     Button btnSignUp;
     TextView mHaveAccount;
-    ProgressBar progressBar;
 
-
-    ProgressDialog progressDialog;
-    private FirebaseAuth mAuth;
-
+    private ProgressDialog mDialog;
+    private FirebaseDatabase database;
+    private DatabaseReference userReference;
+    private ValueEventListener signUpEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-//        ActionBar actionBar= getSupportActionBar();
-//        actionBar.setTitle("Tạo Tài Khoản");
-//        //creta bach button
-//
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setDisplayShowHomeEnabled(true);
+        edtPhoneNumber = findViewById(R.id.edtPhone);
+        edtPassword = findViewById(R.id.edtPassword);
+        edtFullName = findViewById(R.id.edtName);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        mHaveAccount = findViewById(R.id.have_account);
 
-
-        edtPhone =  findViewById(R.id.edtPhone);
-        edtPassword =  findViewById(R.id.edtPassword);
-        edtName= findViewById(R.id.edtName);
-//        edtEmail =  findViewById(R.id.edtEmail);
-        btnSignUp=  findViewById(R.id.btnSignUp);
-        mHaveAccount= findViewById(R.id.have_account);
-
-//        mAuth= FirebaseAuth.getInstance();
-//        findViewById(R.id.btnSignUp).setOnClickListener(this);
-        final FirebaseDatabase database= FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("User");
+        database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("User");
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final ProgressDialog mDialog= new ProgressDialog(SignUp.this);
+                mDialog = new ProgressDialog(SignUp.this);
                 mDialog.setMessage("Vui lòng đợi...");
                 mDialog.show();
 
-                table_user.addValueEventListener(new ValueEventListener() {
+                signUpEventListener = userReference.addValueEventListener(new ValueEventListener() {
+                    String phoneNumber = edtPhoneNumber.getText().toString().trim();
+                    String fullName = edtFullName.getText().toString().trim();
+                    String password = edtPassword.getText().toString().trim();
+
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists())
-                        {
+                        if (dataSnapshot.child(phoneNumber).exists()) {
                             mDialog.dismiss();
-                            Toast.makeText(SignUp.this,"Số điện thoại đã được đăng ký",Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
+                            Toast.makeText(SignUp.this, "Số điện thoại đã được đăng ký", Toast.LENGTH_SHORT).show();
+                        } else {
                             mDialog.dismiss();
-                            User user= new User(edtName.getText().toString(),edtPassword.getText().toString());
-                            table_user.child(edtPhone.getText().toString()).setValue(user);
-                            Toast.makeText(SignUp.this,"Đăng ký thành công",Toast.LENGTH_SHORT).show();
-                            finish();
+                            User user = new User(fullName, phoneNumber, password, false);
+                            userReference.child(phoneNumber).setValue(user);
+                            Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
 
+                            userReference.removeEventListener(signUpEventListener);
+                            startActivity(new Intent(SignUp.this, SignIn.class));
+//                        finish();
                         }
-
                     }
 
                     @Override
@@ -92,26 +77,21 @@ public class SignUp extends AppCompatActivity  {
 
                     }
                 });
-
             }
         });
-
-
-
-
 
         //handle signin text view
         mHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignUp.this,SignIn.class));
+                startActivity(new Intent(SignUp.this, SignIn.class));
             }
         });
+    }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
 //    @Override
