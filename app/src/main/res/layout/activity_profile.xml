@@ -39,7 +39,7 @@
             android:background="@drawable/reg_edtext_style"
             android:inputType="textEmailAddress"
             android:padding="18dp"
-            android:text="full name"></com.google.android.material.textfield.TextInputEditText>
+            android:text="Nhập Họ Tên"></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
 <!--    <com.google.android.material.textfield.TextInputLayout-->
@@ -81,7 +81,7 @@
             android:background="@drawable/reg_edtext_style"
             android:inputType="textPhonetic"
             android:padding="18dp"
-            android:text="phone number">
+            android:text="Nhập số điện thoại">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +95,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/reg_btnsignin"
-        android:text="Save"
+        android:text="Lưu"
         android:textColor="@color/white"></Button>
 
 </RelativeLayout>
