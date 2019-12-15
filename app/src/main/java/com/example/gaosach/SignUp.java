@@ -3,6 +3,8 @@ package com.example.gaosach;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.gaosach.Common.Validator.isEmpty;
+import static com.example.gaosach.Common.Validator.isPassword;
+import static com.example.gaosach.Common.Validator.isPhoneNumber;
+
 public class SignUp extends AppCompatActivity {
     EditText edtPhoneNumber, edtPassword, edtFullName;
     Button btnSignUp;
@@ -28,6 +34,7 @@ public class SignUp extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userReference;
     private ValueEventListener signUpEventListener;
+    private boolean isValidPhoneNumber, isValidPassword, isValidFullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +47,14 @@ public class SignUp extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btnSignUp);
         mHaveAccount = findViewById(R.id.have_account);
 
+        isValidFullName = isValidPhoneNumber = isValidPassword = false;
+        activeSignUpButton(false);
         database = FirebaseDatabase.getInstance();
         userReference = database.getReference("User");
+
+        edtFullName.addTextChangedListener(signUpTextWatcher);
+        edtPhoneNumber.addTextChangedListener(signUpTextWatcher);
+        edtPassword.addTextChangedListener(signUpTextWatcher);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +81,6 @@ public class SignUp extends AppCompatActivity {
 
                             userReference.removeEventListener(signUpEventListener);
                             startActivity(new Intent(SignUp.this, SignIn.class));
-//                        finish();
                         }
                     }
 
@@ -89,6 +101,70 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    private void activeSignUpButton(boolean isEnable) {
+        btnSignUp.setEnabled(isEnable);
+        if(!isEnable) {
+            btnSignUp.setBackgroundResource(R.drawable.reg_btn_inactive);
+        } else {
+            btnSignUp.setBackgroundResource(R.drawable.reg_btnsignup);
+        }
+    }
+
+    private TextWatcher signUpTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // Check if full name is valid
+            String fullName = edtFullName.getText().toString().trim();
+            if (isEmpty(fullName)) {
+                edtFullName.setError(getString(R.string.input_error_name));
+                isValidFullName = false;
+            } else {
+                isValidFullName = true;
+            }
+
+            // Check if phone number is valid
+            String phoneNumber = edtPhoneNumber.getText().toString().trim();
+            if (isEmpty(phoneNumber)) {
+                edtPhoneNumber.setError(getString(R.string.input_error_phone));
+                isValidPhoneNumber = false;
+            }
+
+            if (!isPhoneNumber(phoneNumber)) {
+                edtPhoneNumber.setError(getString(R.string.input_error_phone_invalid));
+                isValidPhoneNumber = false;
+            } else {
+                isValidPhoneNumber = true;
+            }
+
+            // Check if password is valid
+            String password = edtPassword.getText().toString().trim();
+            if (isEmpty(password)) {
+                edtPassword.setError(getString(R.string.input_error_password));
+                isValidPassword = false;
+            }
+
+            if (!isPassword(password)) {
+                edtPassword.setError(getString(R.string.input_error_password_length));
+                isValidPassword = false;
+            } else {
+                isValidPassword = true;
+            }
+
+            activeSignUpButton(isValidFullName && isValidPhoneNumber && isValidPassword);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+
+    };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -106,7 +182,7 @@ public class SignUp extends AppCompatActivity {
 //    private void SignUpUser(){
 //        final String Name= edtName.getText().toString().trim();
 //        final String Email= edtEmail.getText().toString().trim();
-//        final String Phone= edtPhone.getText().toString().trim();
+//        final String Phone= edtPhoneNumber.getText().toString().trim();
 //        String Password= edtPassword.getText().toString().trim();
 //
 //        if(Name.isEmpty()){
@@ -137,14 +213,14 @@ public class SignUp extends AppCompatActivity {
 //        }
 //
 //        if (Phone.isEmpty()) {
-//            edtPhone.setError(getString(R.string.input_error_phone));
-//            edtPhone.requestFocus();
+//            edtPhoneNumber.setError(getString(R.string.input_error_phone));
+//            edtPhoneNumber.requestFocus();
 //            return;
 //        }
 //
 //        if (Phone.length() != 10) {
-//            edtPhone.setError(getString(R.string.input_error_phone_invalid));
-//            edtPhone.requestFocus();
+//            edtPhoneNumber.setError(getString(R.string.input_error_phone_invalid));
+//            edtPhoneNumber.requestFocus();
 //            return;
 //        }
 //
