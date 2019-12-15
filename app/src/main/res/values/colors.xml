@@ -13,6 +13,7 @@
     <color name="overlayBackground">#7f333639</color>
     <color name="overlaybg">#7FCBE1E9</color>
     <color name="overlayActionBar">#FFFFFF</color>
+    <color name="btnInactive">#E0E0E0</color>
 
 
 
