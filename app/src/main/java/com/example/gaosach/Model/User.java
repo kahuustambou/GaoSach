@@ -3,22 +3,31 @@ package com.example.gaosach.Model;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.gaosach.Common.Validator.isEmpty;
-
 public class User {
     private String name;
     private String phone;
     private String password;
+    private String sourceCode;
     private boolean isStaff = false;
 
     public User() {
     }
 
-    public User(String name, String phoneNumber, String password, boolean isStaff) {
+    public User(String name, String phone, String password, boolean isStaff, String sourceCode) {
         this.name = name;
-        this.phone = phoneNumber;
+        this.phone = phone;
         this.password = password;
         this.isStaff = isStaff;
+        this.sourceCode= sourceCode;
+
+    }
+
+    public String getSourceCode() {
+        return sourceCode;
+    }
+
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = sourceCode;
     }
 
     public String getName() {

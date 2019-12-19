@@ -1,9 +1,23 @@
 package com.example.gaosach.Common;
 
 import com.example.gaosach.Model.User;
+import com.example.gaosach.Remote.APIService;
+import com.example.gaosach.Remote.RetrofitClient;
 
 public class Common {
     public static User currentUser;
+    private static final String BASE_URL="https://fcm.googleapis.com/";
+
+    public static APIService getFCMService()
+    {
+        return RetrofitClient.getClient(BASE_URL).create(APIService.class);
+    }
+
+
+
+
+
+
 
 //<<<<<<< HEAD
 

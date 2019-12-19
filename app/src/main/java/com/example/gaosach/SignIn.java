@@ -1,11 +1,15 @@
 package com.example.gaosach;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import io.paperdb.Paper;
 
 import static com.example.gaosach.Common.Common.PASSWORD_KEY;
@@ -32,9 +35,10 @@ import static com.example.gaosach.Common.Validator.isPhoneNumber;
 public class SignIn extends AppCompatActivity {
 
     EditText edtPhone, edtPassword;
-    TextView notHaveAccount;
+    TextView notHaveAccount, txtForgetpw;
     Button btnSignIn;
-    TextView txtRememberMe;
+    CheckBox txtRememberMe;
+
     private boolean isRemembered, isClickedSignIn;
 
     //declare an instance of firebase
@@ -55,11 +59,27 @@ public class SignIn extends AppCompatActivity {
         notHaveAccount = findViewById(R.id.nothave_account);
         btnSignIn = findViewById(R.id.btnSignIn);
         txtRememberMe = findViewById(R.id.rememberMe);
+        txtForgetpw= findViewById(R.id.txtForgetpw);
         isRemembered = false;
         isClickedSignIn = false;
 
+
         // Init Paper
         Paper.init(this);
+        database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("User");
+
+
+
+        txtForgetpw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                startActivity(new Intent(SignIn.this, SignUp.class));
+                showForgotPwdDialog();
+            }
+        });
+
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,15 +137,19 @@ public class SignIn extends AppCompatActivity {
 
     }
 
+
+
     private void signIn(final String phoneNumber, final String password, final Context context) {
         mDialog = new ProgressDialog(context);
         mDialog.setMessage("Vui lòng đợi...");
         mDialog.show();
 
-        database = FirebaseDatabase.getInstance();
-        userReference = database.getReference("User");
 
-        signInEventListener = userReference.addValueEventListener(new ValueEventListener() {
+
+
+
+
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if user exits
@@ -139,16 +163,19 @@ public class SignIn extends AppCompatActivity {
                         Common.currentUser = user;
 
                         if (isRemembered) {
-                            Paper.book().write(USER_KEY, phoneNumber);
-                            Paper.book().write(PASSWORD_KEY, password);
+                            Paper.book().write(USER_KEY, edtPhone.getText().toString());
+                            Paper.book().write(PASSWORD_KEY, edtPassword.getText().toString());
                         }
 
                         if(isClickedSignIn) {
                             // Navigate to Home
-                            userReference.removeEventListener(signInEventListener);
+//                            userReference.removeEventListener(signInEventListener);
                             startActivity(new Intent(context, Home.class));
                             finish();
+
                         }
+                        userReference.removeEventListener(this);
+
                     } else {
                         Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
                     }
@@ -165,6 +192,61 @@ public class SignIn extends AppCompatActivity {
             }
         });
     }
+
+    private void showForgotPwdDialog() {
+
+        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        builder.setTitle("Quên mật khẩu");
+        builder.setMessage("Nhập mã nguồn của bạn");
+
+
+        LayoutInflater inflater= this.getLayoutInflater();
+        View forgot_view= inflater.inflate(R.layout.forgot_password,null);
+
+        builder.setView(forgot_view);
+        builder.setIcon(R.drawable.ic_security_black_24dp);
+
+        final EditText edtPhone= (EditText)forgot_view.findViewById(R.id.edtNumberPhone);
+        final EditText edtSourceCode= (EditText)forgot_view.findViewById(R.id.edtsourceCode);
+
+        builder.setPositiveButton("ĐÚNG", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                userReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        User user= dataSnapshot.child(edtPhone.getText().toString())
+                                .getValue(User.class);
+
+                        if(user.getSourceCode().equals(edtSourceCode.getText().toString()))
+                            Toast.makeText(SignIn.this,"Mật khẩu của bạn: "+ user.getPassword(),Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(SignIn.this,"Sai mã nguồn",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+        });
+        builder.setNegativeButton("SAI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface1, int i) {
+
+            }
+        });
+        builder.show();
+
+
+    }
+
 
     @Override
     protected void onDestroy() {

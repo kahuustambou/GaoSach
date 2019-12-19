@@ -6,7 +6,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
 import com.example.gaosach.Model.Rice;
 import com.example.gaosach.ViewHolder.RiceViewHolder;
@@ -45,6 +47,10 @@ public class RiceList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Rice, RiceViewHolder> searchAdapter;
     List<String> suggesList= new ArrayList<>();
     MaterialSearchBar materialSearchBar;
+    //yêu thích
+
+    Database locaDB;
+
 
 
     @Override
@@ -55,6 +61,8 @@ public class RiceList extends AppCompatActivity {
         //firebase
         database=FirebaseDatabase.getInstance();
         riceList= database.getReference("Rices");
+        //local DB
+        locaDB= new Database(this);
 
         recyclerView=(RecyclerView)findViewById(R.id.recycle_rice);
         recyclerView.setHasFixedSize(true);
@@ -180,17 +188,45 @@ public class RiceList extends AppCompatActivity {
     }
 
     private void loadListRice(String categoryId) {
-        adapter = new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(Rice.class,
+        adapter = new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(
+                Rice.class,
                 R.layout.rice_item,
                 RiceViewHolder.class,
                 riceList.orderByChild("menuId").equalTo(categoryId) //like: select* from rice
                 ) {
             @Override
-            protected void populateViewHolder(RiceViewHolder viewHolder, Rice model, int position) {
+            protected void populateViewHolder(final RiceViewHolder viewHolder, final Rice model, final int position) {
                 viewHolder.rice_name.setText(model.getName());
                 viewHolder.rice_price.setText(model.getPrice());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
+
+                // add yêu thích
+
+                if(locaDB.isFavourite(adapter.getRef(position).getKey()))
+                    viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+
+                //chọn thay doi state yeu thich
+                viewHolder.fav_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(!locaDB.isFavourite(adapter.getRef(position).getKey()))
+                        {
+                            locaDB.addToFavourites(adapter.getRef(position).getKey());
+                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            Toast.makeText(RiceList.this,""+model.getName()+"Đã được thêm vào yêu thích",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            locaDB.removeFavourites(adapter.getRef(position).getKey());
+                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            Toast.makeText(RiceList.this,""+model.getName()+"Đã bị xóa khỏi yêu thích",Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                });
+
 
                 final Rice local = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {

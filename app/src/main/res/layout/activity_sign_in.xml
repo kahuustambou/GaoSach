@@ -13,20 +13,19 @@
         android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_marginTop="250dp"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+
             android:background="@drawable/reg_edtext_style"
             android:hint="Nhập số điện thoại..."
             android:inputType="phone"
             android:padding="18dp"
-            android:text="0123456789">
+            android:text="0562055861">
             <!-- android:text="0368782133"> -->
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -36,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/phone"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         app:errorEnabled="true"
         app:passwordToggleEnabled="true">
 
@@ -48,37 +47,52 @@
             android:hint="   Mật khẩu"
             android:inputType="textPassword"
             android:padding="18dp"
-            android:text="123456">
-        </com.google.android.material.textfield.TextInputEditText>
+            android:text="123456"></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--    <com.rey.material.widget.CheckBox-->
-    <!--        android:id="@+id/ckbRemember"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/text_input_password"-->
-    <!--        android:layout_marginLeft="8dp"-->
-    <!--        android:layout_marginTop="6dp"-->
-    <!--        android:checked="false"-->
-    <!--        android:text="Remember me"-->
-    <!--        android:textColor="@android:color/white" />-->
 
-    <TextView
-        android:id="@+id/rememberMe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_input_password"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="8dp"
-        android:text="Remember me" />
+
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:weightSum="2"
+       android:id="@+id/linear"
+       android:layout_below="@+id/text_input_password"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+
+       >
+       <CheckBox
+           android:id="@+id/rememberMe"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/text_input_password"
+           android:layout_marginLeft="8dp"
+
+           android:textColor="@color/white"
+           android:layout_marginRight="8dp"
+           android:text="Remember me" />
+
+       <TextView
+           android:id="@+id/txtForgetpw"
+           android:textColor="@color/white"
+           android:text="@string/forgor_pwd"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:layout_height="wrap_content">
+
+       </TextView>
+
+
+
+   </LinearLayout>
 
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rememberMe"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/linear"
         android:background="@drawable/reg_btnsignin"
         android:text="Đăng Nhập"
         android:textColor="@color/white"></Button>

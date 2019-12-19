@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.example.gaosach.Model.Order;
-import com.example.gaosach.Model.User;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
@@ -76,4 +75,34 @@ public class Database extends SQLiteAssetHelper {
 //
 //        db.query();
 //    }
+
+    //yêu thích
+    public void addToFavourites(String riceId)
+    {
+        SQLiteDatabase db= getReadableDatabase();
+        String query= String.format("INSERT INTO Favourites(RiceId) VALUES('%s')", riceId);
+        db.execSQL(query);
+
+    }
+    public void removeFavourites(String riceId)
+    {
+        SQLiteDatabase db= getReadableDatabase();
+        String query= String.format("DELETE FROM Favourites WHERE RiceId='%s';", riceId);
+        db.execSQL(query);
+
+    }
+    public boolean isFavourite(String riceId)
+    {
+        SQLiteDatabase db= getReadableDatabase();
+        String query= String.format("SELECT * FROM Favourites WHERE RiceId='%s';", riceId);
+        Cursor cursor= db.rawQuery(query,null);
+        if(cursor.getCount()<=0)
+        {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+
+    }
 }

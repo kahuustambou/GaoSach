@@ -1,32 +1,45 @@
 package com.example.gaosach;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.gaosach.Common.Common;
+import com.example.gaosach.Interface.ItemClickListener;
+import com.example.gaosach.Model.Category;
+import com.example.gaosach.Model.Token;
+import com.example.gaosach.ViewHolder.MenuViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.gaosach.Interface.ItemClickListener;
-import com.example.gaosach.Model.Category;
-import com.example.gaosach.Service.ListenOrder;
-import com.example.gaosach.ViewHolder.MenuViewHolder;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
-
+import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -95,13 +108,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         loadMenu();
 
-        //đang kí service
 
-        Intent service= new Intent(Home.this, ListenOrder.class);
-        startService(service);
-
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+        
 
 
+    }
+
+    private void updateToken(String token) {
+
+        FirebaseDatabase db= FirebaseDatabase.getInstance();
+        DatabaseReference tokens= db.getReference("Tokens");
+        Token data = new Token(token,false);//false vì token tu nguoi dung
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
     private void loadMenu() {
@@ -192,10 +211,90 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
         }
+        else if(id==R.id.nav_change_pwd){
+
+            showChangePasswordDialog();
+
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    private void showChangePasswordDialog() {
+        AlertDialog.Builder alerDialog= new AlertDialog.Builder(Home.this);
+        alerDialog.setTitle("Thay đổi mật khẩu");
+        alerDialog.setMessage("Vui lòng điền đầy đủ thông tin");
+
+        LayoutInflater inflater= LayoutInflater.from(this);
+        View layout_pwd= inflater.inflate(R.layout.change_password_layout,null);
+
+        final MaterialEditText edtPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtPassword);
+        final MaterialEditText edtNewPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtNewPassword);
+        final MaterialEditText edtRepeatPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtRepeatPassword);
+
+        alerDialog.setView(layout_pwd);
+
+        //Button
+        alerDialog.setPositiveButton("THAY ĐỔI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //thay doi password
+                final android.app.AlertDialog waitingDialog= new SpotsDialog(Home.this);
+
+                //ktra mat khau cu
+                if(edtPassword.getText().toString().equals(Common.currentUser.getPassword()))
+                {
+                    if(edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString()))
+                    {
+                        Map<String,Object> passwordUpdate= new HashMap<>();
+                        passwordUpdate.put("password",edtNewPassword.getText().toString());
+
+                        //make update
+                        DatabaseReference user= FirebaseDatabase.getInstance().getReference("User");
+                        user.child(Common.currentUser.getPhone())
+                                .updateChildren(passwordUpdate)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        waitingDialog.dismiss();
+                                        Toast.makeText(Home.this,"Mật khẩu đã được thay đổi",Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(Home.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    }
+                    else
+                    {
+                        waitingDialog.dismiss();
+                        Toast.makeText(Home.this,"Mật khẩu mới không trùng khớp",Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                else
+                {
+                    waitingDialog.dismiss();
+                    Toast.makeText(Home.this,"Mật khẩu cũ sai",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alerDialog.setNegativeButton("HỦY BỎ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alerDialog.show();
+
     }
 
 }

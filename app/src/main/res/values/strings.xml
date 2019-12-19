@@ -22,5 +22,7 @@
     <string name="input_error_password_length">Password must have more than 6 characters</string>
     <string name="input_error_phone">Phone number must not be empty</string>
     <string name="input_error_phone_invalid">Invalid phone number</string>
-    <string name="signup_sucess">Sign up successfully</string>
+
+    <string name="forgor_pwd"><u>Quên mật khẩu?</u></string>
+
 </resources>

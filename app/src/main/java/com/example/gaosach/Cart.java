@@ -2,30 +2,44 @@ package com.example.gaosach;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
+import com.example.gaosach.Model.MyResponse;
+import com.example.gaosach.Model.Notification;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Request;
+import com.example.gaosach.Model.Sender;
+import com.example.gaosach.Model.Token;
+import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.ViewHolder.CartAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Cart extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -39,10 +53,15 @@ public class Cart extends AppCompatActivity {
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
+    APIService mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        //init service
+        mService= Common.getFCMService();
 
         //firebase
         database= FirebaseDatabase.getInstance();
@@ -59,7 +78,12 @@ public class Cart extends AppCompatActivity {
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlerDialog();
+
+               if(cart.size()>0)
+                   showAlerDialog();
+               else
+                   Toast.makeText(Cart.this,"Giỏ hàng của bạn trống",Toast.LENGTH_SHORT).show();
+
             }
 
         });
@@ -74,16 +98,16 @@ public class Cart extends AppCompatActivity {
         alertDialog.setTitle("Thêm một bước");
         alertDialog.setMessage("Nhập địa chỉ của bạn: ");
 
-        final EditText edtAddress= new EditText(Cart.this);
-        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        edtAddress.setLayoutParams(lp);
-        alertDialog.setView(edtAddress);//them text vao dialog
+        LayoutInflater inflater= this.getLayoutInflater();
+        View order_address_comment= inflater.inflate(R.layout.order_address_comment,null);
+        final MaterialEditText edtAddress= (MaterialEditText)order_address_comment.findViewById(R.id.edtAddress);
+        final MaterialEditText edtComment= (MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+
+
+        alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CÓ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // tao request moi
@@ -93,6 +117,8 @@ public class Cart extends AppCompatActivity {
                         Common.currentUser.getName(),
                         edtAddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
+                        edtComment.getText().toString(),
+                        "0",//trang thái
                         cart
 
                 );
@@ -100,16 +126,18 @@ public class Cart extends AppCompatActivity {
 
                 //submit den firebase
                 // chung ta su dung systerm.current den kry
-                requests.child(String.valueOf(System.currentTimeMillis()))
+                String order_number= String.valueOf(System.currentTimeMillis());
+                requests.child(order_number)
                         .setValue(request);
 
                 //delete cart
                 new Database(getBaseContext()).cleanCart();
-                Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng",Toast.LENGTH_SHORT).show();
-                finish();
+
+                sendNotification(order_number);
+//
             }
         });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("KHÔNG", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -120,6 +148,55 @@ public class Cart extends AppCompatActivity {
 
 
 
+    }
+
+    private void sendNotification(final String order_number) {
+
+        DatabaseReference tokens= FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data= tokens.orderByChild("isServerToken").equalTo(true);//lay tat ca cac isServerToken là đúng
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                {
+                    Token serverToken= postSnapShot.getValue(Token.class);
+
+                    //create raw payload tosend
+                    Notification notification= new Notification("KDMT Dev","Bạn có một đơn hàng mới "+order_number);
+                    Sender content = new Sender(serverToken.getToken(),notification);
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    //chi chay khi lay ket qua
+
+                                 if(response.code()== 200) {
+                                     if (response.body().success == 1) {
+                                         Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
+                                         finish();
+                                     } else {
+                                         Toast.makeText(Cart.this, "Thất bại!!!", Toast.LENGTH_SHORT).show();
+
+
+                                     }
+                                 }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("Lỗi",t.getMessage());
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadListRice() {

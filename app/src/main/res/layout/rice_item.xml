@@ -50,16 +50,35 @@
                 android:textStyle="bold"
                 android:text="Name of rice"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-                <TextView
-                    android:id="@+id/rice_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="italic"
-                    android:text="Name of price"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/rice_price"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="5dp"
+                        android:textStyle="italic"
+                        android:text="Name of price"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <ImageView
+                        android:id="@+id/fav"
+                        android:tint="@color/red"
+                        android:layout_marginTop="30dp"
+                        android:src="@drawable/ic_favorite_border_black_24dp"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"></ImageView>
+
+                </LinearLayout>
             </LinearLayout>
 
 

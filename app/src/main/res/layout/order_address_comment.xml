@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+
+
+    >
+<!--    <LinearLayout-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        >-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+           <com.rengwuxian.materialedittext.MaterialEditText
+
+               android:id="@+id/edtAddress"
+               android:hint="Địa chỉ:"
+               android:textColorHint="@color/black"
+               android:text=""
+               android:inputType="text"
+               android:textSize="24sp"
+               android:textColor="@color/colorPrimary"
+               app:met_baseColor="@color/colorPrimary"
+               app:met_floatingLabel="highlight"
+               app:met_primaryColor="@color/colorPrimary"
+               android:layout_width="match_parent"
+               app:met_singleLineEllipsis="true"
+               android:layout_height="wrap_content">
+
+           </com.rengwuxian.materialedittext.MaterialEditText>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+
+                android:id="@+id/edtComment"
+                android:hint="Bình luận:"
+                android:textColorHint="@color/black"
+                android:text=""
+                android:textSize="24sp"
+                android:inputType="textMultiLine"
+                android:textColor="@color/colorPrimary"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                android:layout_width="match_parent"
+                app:met_singleLineEllipsis="true"
+                android:layout_height="wrap_content">
+
+            </com.rengwuxian.materialedittext.MaterialEditText>
+
+
+        </LinearLayout>
+
+
+<!--    </LinearLayout>-->
+</androidx.cardview.widget.CardView>

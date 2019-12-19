@@ -7,19 +7,20 @@ public class Request {
     private String name;
     private String address;
     private String total;
+    private String comment;
     private String status;
     private List<Order> rices;
-
 
     public Request() {
     }
 
-    public Request(String phone, String name, String address, String total,List<Order> rices) {
+    public Request(String phone, String name, String address, String total, String comment, String status, List<Order> rices) {
         this.phone = phone;
         this.name = name;
         this.address = address;
         this.total = total;
-        this.status = "0"; //defaute 0 place,1 shpping, 2 shipping
+        this.comment = comment;
+        this.status = status;
         this.rices = rices;
     }
 
@@ -53,6 +54,14 @@ public class Request {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getStatus() {

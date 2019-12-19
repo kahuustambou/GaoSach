@@ -1,0 +1,17 @@
+package com.example.gaosach.Model;
+
+public class Sender {
+
+    public String to;
+    public Notification notification;
+
+//    public Sender(String token, Notification notification) {
+////    }
+
+    public Sender(String to, Notification notification) {
+        this.to = to;
+        this.notification = notification;
+    }
+
+
+}

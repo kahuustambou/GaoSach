@@ -9,9 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.gaosach.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,8 +16,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class SignUp extends AppCompatActivity {
-    EditText edtPhoneNumber, edtPassword, edtFullName;
+    EditText edtPhoneNumber, edtPassword, edtFullName,edtsourceCode;
     Button btnSignUp;
     TextView mHaveAccount;
 
@@ -37,6 +37,8 @@ public class SignUp extends AppCompatActivity {
         edtPhoneNumber = findViewById(R.id.edtPhone);
         edtPassword = findViewById(R.id.edtPassword);
         edtFullName = findViewById(R.id.edtName);
+        edtsourceCode= findViewById(R.id.edtsourceCode);
+
         btnSignUp = findViewById(R.id.btnSignUp);
         mHaveAccount = findViewById(R.id.have_account);
 
@@ -54,6 +56,7 @@ public class SignUp extends AppCompatActivity {
                     String phoneNumber = edtPhoneNumber.getText().toString().trim();
                     String fullName = edtFullName.getText().toString().trim();
                     String password = edtPassword.getText().toString().trim();
+                    String sourceCode= edtsourceCode.getText().toString().trim();
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -62,7 +65,7 @@ public class SignUp extends AppCompatActivity {
                             Toast.makeText(SignUp.this, "Số điện thoại đã được đăng ký", Toast.LENGTH_SHORT).show();
                         } else {
                             mDialog.dismiss();
-                            User user = new User(fullName, phoneNumber, password, false);
+                            User user = new User(fullName, phoneNumber, password, false,sourceCode);
                             userReference.child(phoneNumber).setValue(user);
                             Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
 

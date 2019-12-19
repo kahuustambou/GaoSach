@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.gaosach.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +15,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import io.paperdb.Paper;
 
 import static com.example.gaosach.Common.Common.PASSWORD_KEY;
@@ -43,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         if(isLoggedInUser(user, password)) {
             signIn(user, password, MainActivity.this);
         }
+//        if(user!= null && password !=null)
+//        {
+//            if(!user.isEmpty() && !password.isEmpty())
+//                login(user,password);
+//        }
 
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignUp = findViewById(R.id.btnSignUp);
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     // Check if user's already logged in
     private boolean isLoggedInUser(String user, String password) {
