@@ -13,7 +13,7 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:iconTint="@color/white"
-            android:title="Tài Khoản" />
+            android:title="Chỉnh sửa thông tin" />
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_shopping_cart_black_24dp"

@@ -115,13 +115,13 @@ public class Profile extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Profile.this, "Successful", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Profile.this, "Thay đổi thành công", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Profile.this, "Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Profile.this, "Thay đổi thất bại", Toast.LENGTH_LONG).show();
                     }
                 });
 
