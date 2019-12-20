@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
@@ -38,7 +39,8 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     TextView rice_name,rice_price,rice_description;
     ImageView rice_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btnCart,btnRating;
+    FloatingActionButton btnRating;
+    CounterFab btnCart;
     ElegantNumberButton numberButton;
     RatingBar ratingBar;
 
@@ -71,7 +73,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
         //Init view
         numberButton=(ElegantNumberButton)findViewById(R.id.number_button);
-        btnCart=(FloatingActionButton)findViewById(R.id.btnCart);
+        btnCart=(CounterFab) findViewById(R.id.btnCart);
         btnRating= (FloatingActionButton)findViewById(R.id.btn_rating);
         ratingBar=(RatingBar)findViewById(R.id.ratingBar);
 
@@ -101,6 +103,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             }
         });
+        btnCart.setCount(new Database(this).getCountCart());
 
 
         collapsingToolbarLayout= (CollapsingToolbarLayout)findViewById(R.id.collapsing);

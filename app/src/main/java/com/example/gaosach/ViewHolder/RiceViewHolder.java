@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RiceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView rice_name, rice_price;
-    public ImageView rice_image, fav_image;
+    public ImageView rice_image, fav_image,quick_cart;
     private ItemClickListener itemClickListener;
 
 
@@ -24,7 +24,7 @@ public class RiceViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         rice_image= (ImageView)itemView.findViewById(R.id.rice_image);
         rice_price= (TextView)itemView.findViewById(R.id.rice_price);
         fav_image= (ImageView)itemView.findViewById(R.id.fav);
-
+        quick_cart=(ImageView)itemView.findViewById(R.id.btn_quick_cart);
 
 
 

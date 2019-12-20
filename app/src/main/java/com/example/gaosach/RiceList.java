@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
+import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Rice;
 import com.example.gaosach.ViewHolder.RiceViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -178,6 +179,14 @@ public class RiceList extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //fix
+        if(adapter!= null)
+            adapter.startListening();
+    }
+
     private void startSearch(CharSequence text) {
         searchAdapter= new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(
                 Rice.class,
@@ -243,6 +252,21 @@ public class RiceList extends AppCompatActivity {
                 viewHolder.rice_price.setText(String.format("%s /kg",model.getPrice().toString()));
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
+
+                //quick cart
+                viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Database(getBaseContext()).addToCart(new Order(
+                                adapter.getRef(position).getKey(),
+                                model.getName(),
+                                "1",
+                                model.getPrice(),
+                                model.getDiscount()
+                        ));
+                        Toast.makeText(RiceList.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 // add yêu thích
 

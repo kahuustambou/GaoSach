@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.example.gaosach.Common.Common;
+import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
 import com.example.gaosach.Model.Category;
 import com.example.gaosach.Model.Token;
@@ -20,7 +22,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,6 +59,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
     SwipeRefreshLayout swipeRefreshLayout;
+
+    CounterFab fab;
 
 
 
@@ -112,7 +115,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // Init Paper
         Paper.init(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab =(CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +123,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 startActivity(cartIntent);
             }
         });
+
+        fab.setCount(new Database(this).getCountCart());
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -158,6 +165,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(new Database(this).getCountCart());
+        if(adapter!=null)
+            adapter.startListening();
     }
 
     private void updateToken(String token) {
