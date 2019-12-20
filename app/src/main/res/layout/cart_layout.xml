@@ -43,12 +43,19 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
-        <ImageView
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="16dp"
-            android:id="@+id/cart_item_count"
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:id="@+id/btn_quantity"
+            android:layout_margin="10dp"
+            app:textSize="8sp"
+            app:backGroundColor="@color/green"
+            app:initialNumber="1"
+            app:finalNumber="20"
+
+
+            />
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

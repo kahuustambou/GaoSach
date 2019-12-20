@@ -51,7 +51,7 @@ public class Cart extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
-    TextView txtTotalPrice;
+    public TextView txtTotalPrice;
     Button btnPlaceOrder;
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
@@ -224,6 +224,7 @@ public class Cart extends AppCompatActivity {
         //tinh tong cong tien
 
         int total=0;
+
         for (Order order:cart)
             total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
         Locale locale= new Locale("en","US");
