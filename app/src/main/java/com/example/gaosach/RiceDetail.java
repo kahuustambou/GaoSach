@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RiceDetail extends AppCompatActivity implements RatingDialogListener {
 
@@ -46,9 +49,20 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     Rice currentRice;
 
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
+
         setContentView(R.layout.activity_rice_detail);
         //firebase
         database= FirebaseDatabase.getInstance();

@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="200dp"
-    app:cardElevation="4dp">
+    android:id="@+id/swipe_layout"
+    app:cardElevation="10dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/background"
+    app:cardCornerRadius="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,7 +27,7 @@
             android:layout_height="wrap_content"
             android:background="@color/overlayBackground"
             android:gravity="center"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:text="Name of Menu"
             android:textColor="@color/white"
             android:textSize="20dp"></TextView>

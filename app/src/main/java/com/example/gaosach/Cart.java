@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +41,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Cart extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -56,8 +59,22 @@ public class Cart extends AppCompatActivity {
     APIService mService;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //add code before setContentview method
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+        .setFontAttrId(R.attr.fontPath)
+        .build());
+
+
         setContentView(R.layout.activity_cart);
 
         //init service

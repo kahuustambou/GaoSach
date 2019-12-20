@@ -1,6 +1,7 @@
 package com.example.gaosach;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.Common.Validator.isPassword;
@@ -37,8 +40,18 @@ public class SignUp extends AppCompatActivity {
     private boolean isValidPhoneNumber, isValidPassword, isValidFullName;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_sign_up);
 
         edtPhoneNumber = findViewById(R.id.edtPhone);

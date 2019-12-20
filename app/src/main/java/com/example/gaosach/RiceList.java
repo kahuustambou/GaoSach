@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RiceList extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -55,9 +58,20 @@ public class RiceList extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
 
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
+
         setContentView(R.layout.activity_rice_list);
 
         //firebase
@@ -226,7 +240,7 @@ public class RiceList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final RiceViewHolder viewHolder, final Rice model, final int position) {
                 viewHolder.rice_name.setText(model.getName());
-                viewHolder.rice_price.setText(model.getPrice());
+                viewHolder.rice_price.setText(String.format("%s /kg",model.getPrice().toString()));
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
 

@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.example.gaosach.Common.Common;
@@ -12,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -23,9 +26,20 @@ public class OrderStatus extends AppCompatActivity {
     DatabaseReference requests;
 
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_order_status);
         
         //firebase
