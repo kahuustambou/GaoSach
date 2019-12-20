@@ -138,7 +138,7 @@ public class SignUp extends AppCompatActivity {
             }
 
             if (!isPhoneNumber(phoneNumber)) {
-                edtPhoneNumber.setError(getString(R.string.input_error_phone_invalid));
+                edtPhoneNumber.setError("Số điện thoại mặc định là 10 số");
                 isValidPhoneNumber = false;
             } else {
                 isValidPhoneNumber = true;
@@ -152,7 +152,7 @@ public class SignUp extends AppCompatActivity {
             }
 
             if (!isPassword(password)) {
-                edtPassword.setError(getString(R.string.input_error_password_length));
+                edtPassword.setError("Mật khẩu phải có ít nhất 6 kí tự");
                 isValidPassword = false;
             } else {
                 isValidPassword = true;

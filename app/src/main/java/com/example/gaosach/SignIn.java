@@ -140,12 +140,12 @@ public class SignIn extends AppCompatActivity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String phoneNumber = edtPhone.getText().toString().trim();
             if (isEmpty(phoneNumber)) {
-                edtPhone.setError(getString(R.string.input_error_phone));
+                edtPhone.setError("Vui lòng nhập số điện thoại");
                 isValidPhoneNumber = false;
             }
 
             if (!isPhoneNumber(phoneNumber)) {
-                edtPhone.setError(getString(R.string.input_error_phone_invalid));
+                edtPhone.setError("Số điện thoại bắt buộc là 10 số");
                 isValidPhoneNumber = false;
             } else {
                 isValidPhoneNumber = true;
@@ -153,12 +153,12 @@ public class SignIn extends AppCompatActivity {
 
             String password = edtPassword.getText().toString().trim();
             if (isEmpty(password)) {
-                edtPassword.setError(getString(R.string.input_error_password));
+                edtPassword.setError("Vui lòng nhập mật khẩu của bạn");
                 isValidPassword = false;
             }
 
             if (!isPassword(password)) {
-                edtPassword.setError(getString(R.string.input_error_password_length));
+                edtPassword.setError("Mật khẩu phải có ít nhất 6 kí tự");
                 isValidPassword = false;
             } else {
                 isValidPassword = true;

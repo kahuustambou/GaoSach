@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/reg_edtext_style"
-            android:hint="   Mật khẩu"
+            android:hint="Mật khẩu"
             android:inputType="textPassword"
             android:padding="18dp"
             android:text="">

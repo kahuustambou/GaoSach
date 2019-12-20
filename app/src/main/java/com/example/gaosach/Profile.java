@@ -93,6 +93,7 @@ public class Profile extends AppCompatActivity {
     }
 
     private boolean checkValidInputs(String fullName, String phoneNumber) {
+
         if (isEmpty(phoneNumber)) {
             edtPhoneNumber.setError(getString(R.string.input_error_phone));
             edtPhoneNumber.requestFocus();
@@ -100,11 +101,10 @@ public class Profile extends AppCompatActivity {
         }
 
         if (!isPhoneNumber(phoneNumber)) {
-            edtPhoneNumber.setError(getString(R.string.input_error_phone_invalid));
+            edtPhoneNumber.setError("Số điện thoại mặc định phải có 10 số");
             edtPhoneNumber.requestFocus();
             return false;
         }
-
         return true;
     }
 
