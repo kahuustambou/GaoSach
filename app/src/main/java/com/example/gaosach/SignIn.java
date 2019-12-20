@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +42,7 @@ public class SignIn extends AppCompatActivity {
     CheckBox txtRememberMe;
 
     private boolean isRemembered, isClickedSignIn;
+    private boolean isValidPhoneNumber, isValidPassword;
 
     //declare an instance of firebase
     private FirebaseDatabase database;
@@ -62,6 +65,8 @@ public class SignIn extends AppCompatActivity {
         txtForgetpw= findViewById(R.id.txtForgetpw);
         isRemembered = false;
         isClickedSignIn = false;
+        isValidPhoneNumber = false;
+        isValidPassword = false;
 
 
         // Init Paper
@@ -81,36 +86,16 @@ public class SignIn extends AppCompatActivity {
 
 
 
+        activeSignInButton(false);
+        edtPhone.addTextChangedListener(signInTextWatcher);
+        edtPassword.addTextChangedListener(signInTextWatcher);
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isClickedSignIn = true;
                 String phoneNumber = edtPhone.getText().toString().trim();
                 String password = edtPassword.getText().toString().trim();
-                if (isEmpty(phoneNumber)) {
-                    edtPhone.setError(getString(R.string.input_error_phone));
-                    edtPhone.requestFocus();
-                    return;
-                }
-
-                if (!isPhoneNumber(phoneNumber)) {
-                    edtPhone.setError(getString(R.string.input_error_phone_invalid));
-                    edtPhone.requestFocus();
-                    return;
-                }
-
-                if (isEmpty(password)) {
-                    edtPassword.setError(getString(R.string.input_error_password));
-                    edtPassword.requestFocus();
-                    return;
-                }
-
-                if (!isPassword(password)) {
-                    edtPassword.setError(getString(R.string.input_error_password_length));
-                    edtPassword.requestFocus();
-                    return;
-                }
-
                 signIn(phoneNumber, password, SignIn.this);
             }
         });
@@ -134,10 +119,60 @@ public class SignIn extends AppCompatActivity {
         // Init dialog
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Đăng Nhập ...");
-
     }
 
+    private void activeSignInButton(boolean isEnable) {
+        btnSignIn.setEnabled(isEnable);
+        if(!isEnable) {
+            btnSignIn.setBackgroundResource(R.drawable.reg_btn_inactive);
+        } else {
+            btnSignIn.setBackgroundResource(R.drawable.reg_btnsignin);
+        }
+    }
 
+    private TextWatcher signInTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String phoneNumber = edtPhone.getText().toString().trim();
+            if (isEmpty(phoneNumber)) {
+                edtPhone.setError(getString(R.string.input_error_phone));
+                isValidPhoneNumber = false;
+            }
+
+            if (!isPhoneNumber(phoneNumber)) {
+                edtPhone.setError(getString(R.string.input_error_phone_invalid));
+                isValidPhoneNumber = false;
+            } else {
+                isValidPhoneNumber = true;
+            }
+
+            String password = edtPassword.getText().toString().trim();
+            if (isEmpty(password)) {
+                edtPassword.setError(getString(R.string.input_error_password));
+                isValidPassword = false;
+            }
+
+            if (!isPassword(password)) {
+                edtPassword.setError(getString(R.string.input_error_password_length));
+                isValidPassword = false;
+            } else {
+                isValidPassword = true;
+            }
+
+            activeSignInButton(isValidPhoneNumber && isValidPassword);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+
+    };
 
     private void signIn(final String phoneNumber, final String password, final Context context) {
         mDialog = new ProgressDialog(context);
@@ -167,7 +202,7 @@ public class SignIn extends AppCompatActivity {
                             Paper.book().write(PASSWORD_KEY, edtPassword.getText().toString());
                         }
 
-                        if(isClickedSignIn) {
+                        if (isClickedSignIn) {
                             // Navigate to Home
 //                            userReference.removeEventListener(signInEventListener);
                             startActivity(new Intent(context, Home.class));

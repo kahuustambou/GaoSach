@@ -39,6 +39,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
@@ -53,6 +54,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,30 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Trang chủ");
         setSupportActionBar(toolbar);
+
+        //view
+        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark
+                );
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadMenu();
+            }
+        });
+
+        //defaut, load for first time
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                loadMenu();
+            }
+        });
+
+
 
         //Init firebase
         database = FirebaseDatabase.getInstance();
@@ -106,7 +134,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        loadMenu();
+//        loadMenu();
 
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
@@ -153,6 +181,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         };
 
         recycler_menu.setAdapter(adapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void navigateToWidget(Class widget) {

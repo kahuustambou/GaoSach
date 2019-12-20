@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class RiceList extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -51,6 +52,7 @@ public class RiceList extends AppCompatActivity {
 
     Database locaDB;
 
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -64,18 +66,45 @@ public class RiceList extends AppCompatActivity {
         //local DB
         locaDB= new Database(this);
 
+        swipeRefreshLayout= (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // lay intent
+                if(getIntent() != null)
+                    categoryId= getIntent().getStringExtra("CategoryId");
+                if(!categoryId.isEmpty() && categoryId != null)
+                {
+                    loadListRice(categoryId);
+                }
+
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                // lay intent
+                if(getIntent() != null)
+                    categoryId= getIntent().getStringExtra("CategoryId");
+                if(!categoryId.isEmpty() && categoryId != null)
+                {
+                    loadListRice(categoryId);
+                }
+
+            }
+        });
+
+
         recyclerView=(RecyclerView)findViewById(R.id.recycle_rice);
         recyclerView.setHasFixedSize(true);
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // lay intent
-        if(getIntent() != null)
-            categoryId= getIntent().getStringExtra("CategoryId");
-        if(!categoryId.isEmpty() && categoryId != null)
-        {
-            loadListRice(categoryId);
-        }
+
         // search
         materialSearchBar= (MaterialSearchBar) findViewById(R.id.searchBar);
         materialSearchBar.setHint("Tìm kiếm sản phẩm...");
@@ -251,5 +280,6 @@ public class RiceList extends AppCompatActivity {
         //set adapter
         Log.d("TAG",""+adapter.getItemCount());
         recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
