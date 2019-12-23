@@ -262,7 +262,8 @@ public class RiceList extends AppCompatActivity {
                                 model.getName(),
                                 "1",
                                 model.getPrice(),
-                                model.getDiscount()
+                                model.getDiscount(),
+                                model.getImage()
                         ));
                         Toast.makeText(RiceList.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
                     }

@@ -2,11 +2,16 @@ package com.example.gaosach;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +25,7 @@ import com.example.gaosach.Model.Sender;
 import com.example.gaosach.Model.Token;
 import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.ViewHolder.CartAdapter;
+import com.google.android.gms.location.places.Place;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,6 +63,8 @@ public class Cart extends AppCompatActivity {
     CartAdapter adapter;
 
     APIService mService;
+    Place shippingAddress;
+    private String address;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -110,6 +118,24 @@ public class Cart extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        if(item.getTitle().equals(Common.DELETE))
+            deleteCart(item.getOrder());
+        return true;
+    }
+
+    private void deleteCart(int position) {
+        cart.remove(position);
+        new Database(this).cleanCart();
+        for (Order item:cart)
+            new Database(this).addToCart(item);
+
+        loadListRice();
+
+    }
+
     private void showAlerDialog() {
         AlertDialog.Builder alertDialog= new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("Thêm một bước");
@@ -117,14 +143,46 @@ public class Cart extends AppCompatActivity {
 
         LayoutInflater inflater= this.getLayoutInflater();
         View order_address_comment= inflater.inflate(R.layout.order_address_comment,null);
-        final MaterialEditText edtAddress= (MaterialEditText)order_address_comment.findViewById(R.id.edtAddress);
+     final MaterialEditText edtAddress= (MaterialEditText)order_address_comment.findViewById(R.id.edtAddress);
+
+
+
         final MaterialEditText edtComment= (MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+
+        //radio
+        final RadioButton rdiHomeAddress=(RadioButton)order_address_comment.findViewById(R.id.rdiHomeAddress);
+
+        //su kien cho radio
+        rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if(b)
+                {
+                    if(Common.currentUser.getHomeAddress()!= null ||
+                           !TextUtils.isEmpty(Common.currentUser.getHomeAddress()))
+                    {
+                        address = Common.currentUser.getHomeAddress();
+
+                    }
+                    else
+                    {
+                        Toast.makeText(Cart.this,"Vui lòng cập nhật địa chỉ vận chuyển của bạn",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    
+                }
+
+            }
+        });
+
 
 
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
-        alertDialog.setPositiveButton("CÓ", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("GỬI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // tao request moi
@@ -151,6 +209,10 @@ public class Cart extends AppCompatActivity {
                 new Database(getBaseContext()).cleanCart();
 
                 sendNotification(order_number);
+                Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng thành công",Toast.LENGTH_SHORT).show();
+                Intent move= new Intent(Cart.this,Home.class);
+                startActivity(move);
+
 //
             }
         });
@@ -158,6 +220,7 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+
 
             }
         });
@@ -219,6 +282,7 @@ public class Cart extends AppCompatActivity {
     private void loadListRice() {
         cart= new Database(this).getCarts();
         adapter= new CartAdapter(cart,this);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         //tinh tong cong tien

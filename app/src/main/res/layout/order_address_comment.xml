@@ -22,23 +22,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-           <com.rengwuxian.materialedittext.MaterialEditText
 
-               android:id="@+id/edtAddress"
-               android:hint="Địa chỉ:"
-               android:textColorHint="@color/black"
-               android:text=""
-               android:inputType="text"
-               android:textSize="24sp"
-               android:textColor="@color/colorPrimary"
-               app:met_baseColor="@color/colorPrimary"
-               app:met_floatingLabel="highlight"
-               app:met_primaryColor="@color/colorPrimary"
-               android:layout_width="match_parent"
-               app:met_singleLineEllipsis="true"
-               android:layout_height="wrap_content">
+            <com.rengwuxian.materialedittext.MaterialEditText
 
-           </com.rengwuxian.materialedittext.MaterialEditText>
+                android:id="@+id/edtAddress"
+                android:hint="Địa chỉ:"
+                android:textColorHint="@color/black"
+                android:text=""
+                android:textSize="34sp"
+                android:inputType="textMultiLine"
+                android:textColor="@color/colorPrimary"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                android:layout_width="match_parent"
+                app:met_singleLineEllipsis="true"
+                android:layout_height="wrap_content">
+
+            </com.rengwuxian.materialedittext.MaterialEditText>
 
             <com.rengwuxian.materialedittext.MaterialEditText
 
@@ -57,6 +58,19 @@
                 android:layout_height="wrap_content">
 
             </com.rengwuxian.materialedittext.MaterialEditText>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/rdiHomeAddress"
+                    android:text="Thanh toán khi nhận hàng"
+                    android:textSize="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </RadioButton>
+            </RadioGroup>
 
 
         </LinearLayout>

@@ -278,9 +278,45 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         }
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    private void showHomeAddressDialog() {
+        AlertDialog.Builder alerDialog= new AlertDialog.Builder(Home.this);
+        alerDialog.setTitle("Thay đổi địa chỉ vận chuyển");
+        alerDialog.setMessage("Vui lòng điền đầy đủ thông tin");
+
+        LayoutInflater inflater= LayoutInflater.from(this);
+//        View layout_home= inflater.inflate(R.layout.home_address_layout,null);
+//
+//        final MaterialEditText edtHomeAddress=(MaterialEditText)layout_home.findViewById(R.id.edtHomeAddress);
+//
+//        alerDialog.setView(layout_home);
+//        alerDialog.setPositiveButton("Cập nhật", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int which) {
+//                dialogInterface.dismiss();
+//
+//                //set địa chỉ mới
+//                Common.currentUser.setHomeAddress(edtHomeAddress.getText().toString());
+//
+//                FirebaseDatabase.getInstance().getReference("User")
+//                        .child(Common.currentUser.getPhone())
+//                        .setValue(Common.currentUser)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                Toast.makeText(Home.this,"Cập nhật địa chỉ thành công",Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            }
+//        });
+//        alerDialog.show();
+
+
     }
 
     private void showChangePasswordDialog() {

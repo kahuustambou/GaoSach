@@ -1,16 +1,20 @@
 package com.example.gaosach.ViewHolder;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.gaosach.Cart;
+import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -20,10 +24,12 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-class CartViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+class CartViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener
+, View.OnCreateContextMenuListener{
 
     public TextView txt_cart_name, txt_cart_price;
     public ElegantNumberButton btn_quantity;
+    public ImageView cart_image;
     private ItemClickListener itemClickListener;
 
     public void setTxt_cart_name(TextView txt_cart_name) {
@@ -35,6 +41,9 @@ class CartViewHolder extends  RecyclerView.ViewHolder implements View.OnClickLis
         txt_cart_name=(TextView)itemView.findViewById(R.id.cart_item_name);
         txt_cart_price=(TextView)itemView.findViewById(R.id.cart_item_price);
         btn_quantity=(ElegantNumberButton) itemView.findViewById(R.id.btn_quantity);
+        cart_image=(ImageView) itemView.findViewById(R.id.cart_image);
+
+        itemView.setOnCreateContextMenuListener(this);
 
     }
 
@@ -44,6 +53,14 @@ class CartViewHolder extends  RecyclerView.ViewHolder implements View.OnClickLis
     }
 
 
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+//        contextMenu.setHeaderTitle("Chọn hành động");
+        contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
+
+
+    }
 }
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
     private List<Order> listData= new ArrayList<>();
@@ -64,9 +81,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, final int position) {
 
-//        TextDrawable drawable= TextDrawable.builder()
-//                .buildRound(""+listData.get(position).getQuantity(), Color.RED);
-//        holder.img_cart_count.setImageDrawable(drawable);
+        Picasso.with(cart.getBaseContext())
+                .load(listData.get(position).getImage())
+                .resize(70,70)
+                .centerCrop()
+                .into(holder.cart_image);
 
         holder.btn_quantity.setNumber(listData.get(position).getQuantity());
         holder.btn_quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
