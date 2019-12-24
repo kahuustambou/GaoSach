@@ -12,9 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
+import com.example.gaosach.Model.Banner;
 import com.example.gaosach.Model.Category;
 import com.example.gaosach.Model.Token;
 import com.example.gaosach.ViewHolder.MenuViewHolder;
@@ -23,8 +28,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -62,6 +70,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     CounterFab fab;
 
+    //slider
+    HashMap<String,String> image_list;
+    SliderLayout mSlider;
+
 
 
     @Override
@@ -80,6 +92,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
         setContentView(R.layout.activity_home);
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Trang chủ");
         setSupportActionBar(toolbar);
@@ -162,9 +176,74 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
-        
+
+        //setup slider
+        //need call all fuction after you innit database firebase
+
+        setupSlider();
 
 
+    }
+
+    private void setupSlider() {
+        mSlider= (SliderLayout)findViewById(R.id.slider);
+        image_list= new HashMap<>();
+
+        final DatabaseReference banner= database.getReference("Banner");
+        banner.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                {
+                    Banner banner= postSnapShot.getValue(Banner.class);
+
+                    //show discreption when click
+                    image_list.put(banner.getName()+"_"+banner.getId(),banner.getImage());
+                }
+                for(String key:image_list.keySet())
+                {
+                    String[] keySplit= key.split("_");
+                    String nameOfRice= keySplit[0];
+                    String idOfRice= keySplit[1];
+
+                    //create slider
+                    final TextSliderView textSliderView= new TextSliderView(getBaseContext());
+                    textSliderView
+                            .description(nameOfRice)
+                            .image(image_list.get(key))
+                            .setScaleType(BaseSliderView.ScaleType.Fit)
+                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                                @Override
+                                public void onSliderClick(BaseSliderView slider) {
+                                    Intent intent= new Intent(Home.this,RiceDetail.class);
+                                    //we will send food id to ridedetail
+                                    intent.putExtras(textSliderView.getBundle());
+                                    startActivity(intent);
+                                }
+                            });
+
+                    //add extra bundle
+                    textSliderView.bundle(new Bundle());
+                    textSliderView.getBundle().putString("RiceId",idOfRice);
+
+                    mSlider.addSlider(textSliderView);
+
+                    //remove event after finish
+                    banner.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mSlider.setCustomAnimation(new DescriptionAnimation());
+        mSlider.setDuration(4000);
     }
 
     @Override
@@ -218,6 +297,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void navigateToWidget(Class widget) {
         startActivity(new Intent(Home.this, widget));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.startListening();
+        mSlider.stopAutoCycle();
     }
 
     public void onBackPressed() {

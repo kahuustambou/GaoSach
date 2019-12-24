@@ -6,7 +6,7 @@
     android:id="@+id/swipe_layout"
     app:cardElevation="10dp"
     android:layout_margin="10dp"
-    android:background="@drawable/background"
+
     app:cardCornerRadius="0dp">
 
     <RelativeLayout
