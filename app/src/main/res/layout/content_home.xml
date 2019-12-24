@@ -10,9 +10,28 @@
     tools:showIn="@layout/app_bar_home"
     tools:context="com.example.gaosach.Home">
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/recycler_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content">
+
+        <com.daimajia.slider.library.SliderLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </com.daimajia.slider.library.SliderLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:orientation="vertical"
+            android:id="@+id/recycler_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -1,6 +1,7 @@
 package com.example.gaosach;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,8 @@ import com.example.gaosach.Database.Database;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Rating;
 import com.example.gaosach.Model.Rice;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +52,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     DatabaseReference rices;
     DatabaseReference ratingTbl;
     Rice currentRice;
+    TextView txtShowComment;
 
 
 
@@ -66,6 +70,18 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
 
         setContentView(R.layout.activity_rice_detail);
+
+        txtShowComment= (TextView)findViewById(R.id.txtShowComment);
+        txtShowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(RiceDetail.this,ShowComment.class);
+                intent.putExtra(Common.INSERT_RICE_ID,riceId);
+                startActivity(intent);
+
+
+            }
+        });
         //firebase
         database= FirebaseDatabase.getInstance();
         rices= database.getReference("Rices");
@@ -98,7 +114,8 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                         currentRice.getName(),
                         numberButton.getNumber(),
                         currentRice.getPrice(),
-                        currentRice.getDiscount()
+                        currentRice.getDiscount(),
+                        currentRice.getImage()
                 ));
                 Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             }
@@ -220,7 +237,19 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 String.valueOf(value),
                 comments);
 
-        ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
+         //fix user can rating multiple time
+        ratingTbl.push()
+                .setValue(rating)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        Toast.makeText(RiceDetail.this,"Cám ơn bạn đã gửi đánh giá",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+       /* ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(Common.currentUser.getPhone()).exists())
@@ -242,6 +271,6 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 }

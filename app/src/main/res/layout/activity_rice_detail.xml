@@ -179,6 +179,15 @@
                       android:layout_height="wrap_content">
 
                   </RatingBar>
+                  <TextView
+                      android:layout_marginTop="10dp"
+                      android:id="@+id/txtShowComment"
+                      android:textColor="@color/red"
+                      android:text="@string/show_comment"
+                      android:textSize="18dp"
+                      android:layout_marginLeft="10dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
 
                   <TextView
 

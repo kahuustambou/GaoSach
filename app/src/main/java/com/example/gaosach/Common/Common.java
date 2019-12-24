@@ -6,18 +6,18 @@ import com.example.gaosach.Remote.RetrofitClient;
 
 public class Common {
     public static User currentUser;
+
+
+
+    public static String PHONE_TEXT="userPhone";
+
+    public static final String INSERT_RICE_ID="RiceId";
     private static final String BASE_URL="https://fcm.googleapis.com/";
 
     public static APIService getFCMService()
     {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);
     }
-
-
-
-
-
-
 
 //<<<<<<< HEAD
 
@@ -34,4 +34,9 @@ public class Common {
     public static final String USER_KEY = "User";
     public static final String PASSWORD_KEY = "Password";
 //>>>>>>> 3d41be5112c10c44bff1f14cccd5de5f16b16629
+
+    public static final String DELETE="Delete";
+
+
+
 }

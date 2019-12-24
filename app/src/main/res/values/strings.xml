@@ -24,5 +24,7 @@
     <string name="input_error_phone_invalid">Invalid phone number</string>
 
     <string name="forgor_pwd"><u>Quên mật khẩu?</u></string>
+    <string name="show_comment"><u>Hiển thị đánh giá sản phẩm</u></string>
+
 
 </resources>

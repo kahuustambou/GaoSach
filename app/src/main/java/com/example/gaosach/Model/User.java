@@ -8,6 +8,7 @@ public class User {
     private String phone;
     private String password;
     private String sourceCode;
+    private String homeAddress;
     private boolean isStaff = false;
 
     public User() {
@@ -60,6 +61,14 @@ public class User {
 
     public void setIsStaff(boolean isStaff) {
         this.isStaff = isStaff;
+    }
+
+    public String getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress;
     }
 
     public Map<String, Object> toMap() {
