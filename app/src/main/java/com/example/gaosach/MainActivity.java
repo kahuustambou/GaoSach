@@ -25,6 +25,7 @@ import static com.example.gaosach.Common.Common.PASSWORD_KEY;
 import static com.example.gaosach.Common.Common.USER_KEY;
 import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
+import static com.example.gaosach.R.layout.activity_main;
 
 public class MainActivity extends AppCompatActivity {
     Button btnSignIn, btnSignUp;

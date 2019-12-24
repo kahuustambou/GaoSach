@@ -52,6 +52,8 @@ dependencies {
 
 
 
+    //noinspection GradleCompatible
+    implementation  'com.android.support:appcompat-v7:24.2.0'
 
     //noinspection GradleCompatible
 //    implementation 'com.google.firebase:firebase-messaging:10.2.0'

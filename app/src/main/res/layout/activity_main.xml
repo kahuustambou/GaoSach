@@ -19,7 +19,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/sologan"></ImageView>
+            android:src="@drawable/sologan"/>
 
 <!--        <TextView-->
 <!--            android:textSize="25dp"-->
@@ -51,7 +51,7 @@
 
 
 
-           ></Button>
+           />
 
         <Button
             android:id="@+id/btnSignIn"
@@ -62,6 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
            android:background="@drawable/reg_btnsignin"
-            ></Button>
+            />
     </LinearLayout>
 </RelativeLayout>
