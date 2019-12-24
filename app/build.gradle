@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.github.andremion:counterfab:1.0.1'
 
+    //noinspection GradleCompatible
+    implementation  'com.android.support:appcompat-v7:24.2.0'
 
     //noinspection GradleCompatible
 //    implementation 'com.google.firebase:firebase-messaging:10.2.0'

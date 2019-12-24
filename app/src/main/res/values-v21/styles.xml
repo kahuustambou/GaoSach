@@ -1,5 +1,6 @@
 <resources>
 
+<!--    lôĩ nó nằm ơ mấy cái app theme eme ông, nó build ra cái thêeme -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

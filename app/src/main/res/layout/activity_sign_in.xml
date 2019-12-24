@@ -73,7 +73,7 @@
 
            android:textColor="@color/white"
            android:layout_marginRight="8dp"
-           android:text="Remember me" />
+           android:text="Ghi nhớ" />
 
        <TextView
            android:id="@+id/txtForgetpw"
