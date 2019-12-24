@@ -282,13 +282,13 @@ public class RiceList extends AppCompatActivity {
                         {
                             locaDB.addToFavourites(adapter.getRef(position).getKey());
                             viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
-                            Toast.makeText(RiceList.this,""+model.getName()+"Đã được thêm vào yêu thích",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RiceList.this,"Đã thích",Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
                             locaDB.removeFavourites(adapter.getRef(position).getKey());
                             viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            Toast.makeText(RiceList.this,""+model.getName()+"Đã bị xóa khỏi yêu thích",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RiceList.this,"Bỏ thích",Toast.LENGTH_SHORT).show();
                         }
 
 
