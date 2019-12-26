@@ -13,12 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".ShowComment"></activity>
-
-<!--        <service-->
-<!--            android:name=".MyFirebaseIdService"-->
-<!--            android:exported="true" />-->
+        <activity android:name=".FavouritesActivity"></activity>
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".ShowComment" /> <!-- <service -->
+        <!-- android:name=".MyFirebaseIdService" -->
+        <!-- android:exported="true" /> -->
         <activity android:name=".Profile" />
         <activity android:name=".Contact" /> <!-- <activity android:name=".ForgotPassword" /> -->
         <activity android:name=".SignIn" />

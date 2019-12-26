@@ -110,6 +110,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View view) {
                 new Database(getBaseContext()).addToCart(new Order(
+                        Common.currentUser.getPhone(),
                         riceId,
                         currentRice.getName(),
                         numberButton.getNumber(),
@@ -120,7 +121,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             }
         });
-        btnCart.setCount(new Database(this).getCountCart());
+        btnCart.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
 
         collapsingToolbarLayout= (CollapsingToolbarLayout)findViewById(R.id.collapsing);
@@ -203,7 +204,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
 //
                 //lay image
-                Picasso.with(getBaseContext()).load(currentRice .getImage())
+                Picasso.with(getBaseContext()).load(currentRice.getImage())
                         .into(rice_image);
 
                 collapsingToolbarLayout.setTitle(currentRice.getName());

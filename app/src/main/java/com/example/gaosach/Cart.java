@@ -3,20 +3,23 @@ package com.example.gaosach;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
+import com.example.gaosach.Helper.RecycleItemTouchHelper;
+import com.example.gaosach.Interface.RecycleItemTouchHelperListener;
 import com.example.gaosach.Model.MyResponse;
 import com.example.gaosach.Model.Notification;
 import com.example.gaosach.Model.Order;
@@ -25,7 +28,9 @@ import com.example.gaosach.Model.Sender;
 import com.example.gaosach.Model.Token;
 import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.ViewHolder.CartAdapter;
+import com.example.gaosach.ViewHolder.CartViewHolder;
 import com.google.android.gms.location.places.Place;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +47,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -50,7 +56,7 @@ import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class Cart extends AppCompatActivity {
+public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
@@ -65,6 +71,8 @@ public class Cart extends AppCompatActivity {
     APIService mService;
     Place shippingAddress;
     private String address;
+
+    RelativeLayout rootLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -88,6 +96,9 @@ public class Cart extends AppCompatActivity {
         //init service
         mService= Common.getFCMService();
 
+        rootLayout= (RelativeLayout)findViewById(R.id.rootLayout);
+
+
         //firebase
         database= FirebaseDatabase.getInstance();
         requests= database.getReference("Requests");
@@ -97,7 +108,11 @@ public class Cart extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        
+
+        //swipe to delete
+        ItemTouchHelper.SimpleCallback itemTouchHelperCalback= new RecycleItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+        new ItemTouchHelper(itemTouchHelperCalback).attachToRecyclerView(recyclerView);
+
         txtTotalPrice= (TextView)findViewById(R.id.txtTotalPrice);
         btnPlaceOrder=(Button) findViewById(R.id.btnPlaceOrder);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -119,22 +134,22 @@ public class Cart extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if(item.getTitle().equals(Common.DELETE))
-            deleteCart(item.getOrder());
-        return true;
-    }
+//    @Override
+//    public boolean onContextItemSelected(@NonNull MenuItem item) {
+//        if(item.getTitle().equals(Common.DELETE))
+//            deleteCart(item.getOrder());
+//        return true;
+//    }
 
-    private void deleteCart(int position) {
-        cart.remove(position);
-        new Database(this).cleanCart();
-        for (Order item:cart)
-            new Database(this).addToCart(item);
-
-        loadListRice();
-
-    }
+//    private void deleteCart(int position) {
+//        cart.remove(position);
+//        new Database(this).cleanCart(Common.currentUser.getPhone());
+//        for (Order item:cart)
+//            new Database(this).addToCart(item);
+//
+//        loadListRice();
+//
+//    }
 
     private void showAlerDialog() {
         AlertDialog.Builder alertDialog= new AlertDialog.Builder(Cart.this);
@@ -165,10 +180,8 @@ public class Cart extends AppCompatActivity {
                         address = Common.currentUser.getHomeAddress();
 
                     }
-                    else
-                    {
-                        Toast.makeText(Cart.this,"Vui lòng cập nhật địa chỉ vận chuyển của bạn",Toast.LENGTH_SHORT).show();
-                    }
+
+
 
 
                     
@@ -206,7 +219,7 @@ public class Cart extends AppCompatActivity {
                         .setValue(request);
 
                 //delete cart
-                new Database(getBaseContext()).cleanCart();
+                new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
                 sendNotification(order_number);
                 Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng thành công",Toast.LENGTH_SHORT).show();
@@ -280,7 +293,7 @@ public class Cart extends AppCompatActivity {
     }
 
     private void loadListRice() {
-        cart= new Database(this).getCarts();
+        cart= new Database(this).getCarts(Common.currentUser.getPhone());
         adapter= new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -299,6 +312,59 @@ public class Cart extends AppCompatActivity {
         txtTotalPrice.setText(fmt.format(total));
 
 
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if(viewHolder instanceof CartViewHolder) {
+            String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
+            final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+
+            final int deleteIndex = viewHolder.getAdapterPosition();
+
+            adapter.removeItem(deleteIndex);
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
+
+            //update total
+            //tinh tong cong tien
+
+            int total = 0;
+            List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+            for (Order item : orders)
+                total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+            Locale locale = new Locale("vie", "VN");
+            NumberFormat fmt = NumberFormat.getCurrencyInstance();
+
+
+            txtTotalPrice.setText(fmt.format(total));
+
+            //make snackbar
+            Snackbar snackbar = Snackbar.make(rootLayout, name + "Xóa bỏ khỏi giỏ hàng", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Hoàn tác", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adapter.restoreItem(deleteItem, deleteIndex);
+                    new Database(getBaseContext()).addToCart(deleteItem);
+
+
+                    //update total
+                    //tinh tong cong tien
+
+                    int total = 0;
+                    List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+                    for (Order item : orders)
+                        total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                    Locale locale = new Locale("vie", "VN");
+                    NumberFormat fmt = NumberFormat.getCurrencyInstance();
+
+
+                    txtTotalPrice.setText(fmt.format(total));
+                }
+
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }
 

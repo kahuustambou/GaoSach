@@ -138,7 +138,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -249,7 +249,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
         if(adapter!=null)
             adapter.startListening();
     }
@@ -323,14 +323,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 
-//    public boolean onOptionsItemSelect(MenuItem item) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    public boolean onOptionsItemSelect(MenuItem item) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        int id = item.getItemId();
+        if (id == R.id.menu_search) {
+            Intent serch= new Intent(Home.this,SearchActivity.class);
+            startActivity(serch);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -364,11 +365,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         }
 
+        else if(id==R.id.nav_favourites){
+
+            startActivity(new Intent(Home.this,FavouritesActivity.class));
+
+        }
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
     }
+
 
     private void showHomeAddressDialog() {
         AlertDialog.Builder alerDialog= new AlertDialog.Builder(Home.this);
