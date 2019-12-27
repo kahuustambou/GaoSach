@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FavouritesActivity"></activity>
+        <activity android:name=".ForgotPassword"></activity>
+        <activity android:name=".FavouritesActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".ShowComment" /> <!-- <service -->
         <!-- android:name=".MyFirebaseIdService" -->
