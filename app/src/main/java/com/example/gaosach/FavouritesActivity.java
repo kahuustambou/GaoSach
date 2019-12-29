@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FavouritesActivity extends AppCompatActivity implements RecycleItemTouchHelperListener {
 
@@ -29,9 +32,21 @@ public class FavouritesActivity extends AppCompatActivity implements RecycleItem
 
 
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_favourites);
 
         rootLayout=(RelativeLayout) findViewById(R.id.root_layout);
@@ -62,7 +77,7 @@ public class FavouritesActivity extends AppCompatActivity implements RecycleItem
             final int deleteIndex= viewHolder.getAdapterPosition();
 
             adapter.removeItem(viewHolder.getAdapterPosition());
-            new Database(getBaseContext()).removeFavourites(deleteItem.getRiceName(), Common.currentUser.getPhone());
+            new Database(getBaseContext()).removeFavourites(deleteItem.getRiceId(), Common.currentUser.getPhone());
 
             //make snackbar
             Snackbar snackbar = Snackbar.make(rootLayout, name + "Xóa bỏ khỏi yêu thích", Snackbar.LENGTH_LONG);

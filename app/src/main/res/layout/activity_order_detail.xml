@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="4dp"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".OrderDetail">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/order_info"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardElevation="4dp"
+
+
+        >
         <LinearLayout
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
@@ -33,38 +37,26 @@
                     android:layout_gravity="center_vertical|start"
                     android:textAllCaps="true"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:text="Mã đặt hàng"
+                    android:text="Mã đơn hàng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:id="@+id/order_date"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical|start"
-                    android:textAllCaps="true"
-                    android:textStyle="italic"
-                    android:text="Ngày đặt hàng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-
-                <TextView
-                    android:id="@+id/order_status"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical|start"
-                    android:textAllCaps="true"
-                    android:textStyle="italic"
-                    android:text="Status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/order_phone"
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical|start"
                     android:textAllCaps="true"
                     android:textStyle="italic"
-                    android:text="09364782156"
+                    android:text="Sdt đặt hàng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/order_total"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:textAllCaps="true"
+                    android:textStyle="italic"
+                    android:text="$1000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
@@ -73,7 +65,17 @@
                     android:layout_gravity="center_vertical|start"
                     android:textAllCaps="true"
                     android:textStyle="italic"
-                    android:text="Address"
+                    android:text="Địa chỉ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/order_comment"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:textAllCaps="true"
+                    android:textStyle="italic"
+                    android:text="Bình luận"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -81,45 +83,32 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="4"
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:layout_below="@+id/order_info"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Chi tiết:"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lstRices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <Button
-                android:id="@+id/btnDetail"
-                android:text="Chi tiết đơn hàng"
-                android:layout_weight="2"
-                android:layout_width="0dp"
-                android:textSize="15dp"
-
-                android:layout_height="wrap_content"
-                android:background="@drawable/reg_button_order"
-                >
-
-            </Button>
-            <TextView
-                android:id="@+id/btn_cancel"
-                android:drawableLeft="@drawable/ic_cancel_red_24dp"
-                android:text=" HỦY ĐƠN HÀNG"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                android:layout_weight="2"
-                android:layout_width="0dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_height="wrap_content">
-
-            </TextView>
-
-
-
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+
+</RelativeLayout>

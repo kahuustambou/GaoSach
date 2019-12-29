@@ -144,8 +144,7 @@ public class Database extends SQLiteAssetHelper {
                 rice.getRiceImage(),
                 rice.getRiceDiscount(),
                 rice.getRiceDescription(),
-                rice.getUserPhone()
-                );
+                rice.getUserPhone());
         db.execSQL(query);
 
     }
@@ -187,14 +186,15 @@ public class Database extends SQLiteAssetHelper {
         {
             do{
                 result.add(new Favourites(
-                        c.getString(c.getColumnIndex("UserPhone")),
+
                         c.getString(c.getColumnIndex("RiceId")),
                         c.getString(c.getColumnIndex("RiceName")),
+                        c.getString(c.getColumnIndex("RicePrice")),
                         c.getString(c.getColumnIndex("RiceMenuId")),
                         c.getString(c.getColumnIndex("RiceImage")),
-                        c.getString(c.getColumnIndex("RicePrice")),
                         c.getString(c.getColumnIndex("RiceDiscount")),
-                        c.getString(c.getColumnIndex("RiceDescription"))
+                        c.getString(c.getColumnIndex("RiceDescription")),
+                        c.getString(c.getColumnIndex("UserPhone"))
 
 
                 ));

@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:textStyle="bold"
+                android:inputType="textCapCharacters"
                 android:text="Name of rice"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -79,6 +80,7 @@
                         android:layout_height="wrap_content"></ImageView>
 
                     <ImageView
+                        android:layout_marginRight="10dp"
                         android:id="@+id/fav"
                         android:tint="@color/red"
                         android:layout_marginTop="30dp"

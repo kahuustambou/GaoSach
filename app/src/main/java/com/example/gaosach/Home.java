@@ -212,16 +212,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     textSliderView
                             .description(nameOfRice)
                             .image(image_list.get(key))
-                            .setScaleType(BaseSliderView.ScaleType.Fit)
-                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                                @Override
-                                public void onSliderClick(BaseSliderView slider) {
-                                    Intent intent= new Intent(Home.this,RiceDetail.class);
-                                    //we will send food id to ridedetail
-                                    intent.putExtras(textSliderView.getBundle());
-                                    startActivity(intent);
-                                }
-                            });
+                            .setScaleType(BaseSliderView.ScaleType.Fit);
+//                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+//                                @Override
+//                                public void onSliderClick(BaseSliderView slider) {
+//                                    Intent intent= new Intent(Home.this,RiceDetail.class);
+//                                    //we will send food id to ridedetail
+//                                    intent.putExtras(textSliderView.getBundle());
+//                                    startActivity(intent);
+//                                }
+//                            });
 
                     //add extra bundle
                     textSliderView.bundle(new Bundle());
@@ -323,12 +323,23 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 
-    public boolean onOptionsItemSelect(MenuItem item) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+//    public boolean onOptionsItemSelect(MenuItem item) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        int id = item.getItemId();
+//        if (id == R.id.menu_search) {
+//            Intent serch= new Intent(Home.this,SearchActivity.class);
+//            startActivity(serch);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_search) {
-            Intent serch= new Intent(Home.this,SearchActivity.class);
-            startActivity(serch);
+        if(id== R.id.menu_search){
+            Intent search= new Intent(Home.this,SearchActivity.class);
+            startActivity(search);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -342,9 +353,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_profile) {
             navigateToWidget(Profile.class);
 
-        } else if (id == R.id.nav_cart) {
-            navigateToWidget(Cart.class);
-
+//        } else if (id == R.id.nav_cart) {
+//            navigateToWidget(Cart.class);
+//
         } else if (id == R.id.nav_order) {
             navigateToWidget(OrderStatus.class);
 
@@ -356,7 +367,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             // Sign out
             Intent signIn = new Intent(Home.this, SignIn.class);
-            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
         }
         else if(id==R.id.nav_change_pwd){

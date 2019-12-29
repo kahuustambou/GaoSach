@@ -1,5 +1,6 @@
 package com.example.gaosach;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SearchActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Rice, RiceViewHolder> adapter;
@@ -49,9 +52,21 @@ public class SearchActivity extends AppCompatActivity {
     String categoryId="";
 
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/BreeSerif.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_search);
 
         //firebase
@@ -134,6 +149,7 @@ public class SearchActivity extends AppCompatActivity {
                 Rice.class,
                 R.layout.rice_item,
                 RiceViewHolder.class,
+//                riceList
                 riceList.orderByChild("menuId").equalTo(categoryId) //like: select* from rice
         ) {
             @Override

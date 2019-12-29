@@ -256,7 +256,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                     Token serverToken= postSnapShot.getValue(Token.class);
 
                     //create raw payload tosend
-                    Notification notification= new Notification("KDMT Dev","Bạn có một đơn hàng mới "+order_number);
+                    Notification notification= new Notification("Gạo Việt","Bạn có một đơn hàng mới "+order_number);
                     Sender content = new Sender(serverToken.getToken(),notification);
                     mService.sendNotification(content)
                             .enqueue(new Callback<MyResponse>() {
@@ -264,7 +264,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     //chi chay khi lay ket qua
 
-                                 if(response.code()== 200) {
+//                                 if(response.code()== 200) {
                                      if (response.body().success == 1) {
                                          Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
                                          finish();
@@ -273,7 +273,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
                                      }
-                                 }
+
                                 }
 
                                 @Override

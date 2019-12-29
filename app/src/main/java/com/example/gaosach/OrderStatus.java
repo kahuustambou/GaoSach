@@ -1,6 +1,7 @@
 package com.example.gaosach;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -32,6 +33,10 @@ public class OrderStatus extends AppCompatActivity {
 
 
 
+
+
+
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -46,7 +51,9 @@ public class OrderStatus extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_order_status);
-        
+
+
+
         //firebase
         database= FirebaseDatabase.getInstance();
         requests=database.getReference("Requests");
@@ -70,7 +77,7 @@ public class OrderStatus extends AppCompatActivity {
 
         ) {
             @Override
-            protected void populateViewHolder(OrderViewHolder viewHolder, Request model, final int position) {
+            protected void populateViewHolder(OrderViewHolder viewHolder, final Request model, final int position) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
@@ -87,6 +94,16 @@ public class OrderStatus extends AppCompatActivity {
 
                     }
                 });
+                viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderDetail= new Intent(OrderStatus.this,OrderDetail.class);
+                        Common.currentRequest= model;
+                        orderDetail.putExtra("OrderId",adapter.getRef(position).getKey());
+                        startActivity(orderDetail);
+
+                    }
+                });
 
             }
         };
@@ -100,9 +117,9 @@ public class OrderStatus extends AppCompatActivity {
                 .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(OrderStatus.this,new StringBuilder("Order")
+                Toast.makeText(OrderStatus.this,new StringBuilder("Đơn hàng ")
                 .append(key)
-                .append("đã bị hủy thành công").toString(),Toast.LENGTH_SHORT).show();
+                .append("đã bị hủy").toString(),Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -114,6 +131,8 @@ public class OrderStatus extends AppCompatActivity {
         });
 
     }
+
+
 
 
 }

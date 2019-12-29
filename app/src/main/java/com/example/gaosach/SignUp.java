@@ -137,7 +137,7 @@ public class SignUp extends AppCompatActivity {
             // Check if full name is valid
             String fullName = edtFullName.getText().toString().trim();
             if (isEmpty(fullName)) {
-                edtFullName.setError(getString(R.string.input_error_name));
+                edtFullName.setError("Vui lòng nhập tên người dùng");
                 isValidFullName = false;
             } else {
                 isValidFullName = true;
@@ -146,7 +146,7 @@ public class SignUp extends AppCompatActivity {
             // Check if phone number is valid
             String phoneNumber = edtPhoneNumber.getText().toString().trim();
             if (isEmpty(phoneNumber)) {
-                edtPhoneNumber.setError(getString(R.string.input_error_phone));
+                edtPhoneNumber.setError("Nhập sai số điện thoại");
                 isValidPhoneNumber = false;
             }
 

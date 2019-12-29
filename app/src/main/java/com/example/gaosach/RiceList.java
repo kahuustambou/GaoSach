@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Interface.ItemClickListener;
@@ -33,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -42,6 +44,8 @@ public class RiceList extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference riceList;
+
+    CounterFab fab;
 
 
 
@@ -82,6 +86,20 @@ public class RiceList extends AppCompatActivity {
         riceList= database.getReference("Rices");
         //local DB
         locaDB= new Database(this);
+
+         //Init Paper
+        Paper.init(this);
+
+        fab =(CounterFab) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent = new Intent(RiceList.this, Cart.class);
+                startActivity(cartIntent);
+            }
+        });
+
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         swipeRefreshLayout= (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -183,14 +201,21 @@ public class RiceList extends AppCompatActivity {
 
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-        //fix
-        if(adapter!= null)
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        if(adapter!=null)
             adapter.startListening();
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        //fix
+//        if(adapter!= null)
+//            adapter.startListening();
+//    }
 
     private void startSearch(CharSequence text) {
         searchAdapter= new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(
@@ -279,14 +304,19 @@ public class RiceList extends AppCompatActivity {
                                         model.getImage()
                                 ));
                             } else {
+
                                 new Database(getBaseContext()).increaseCart(Common.currentUser.getPhone(), adapter.getRef(position).getKey());
 
 
                             }
+
                             Toast.makeText(RiceList.this, "Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
                         }
 
                         });
+                fab.setCount(new Database(getBaseContext()).getCountCart(Common.currentUser.getPhone()));
+
+
 
 
 
@@ -346,8 +376,11 @@ public class RiceList extends AppCompatActivity {
 
 
 
+
+
             }
         };
+
 
         //set adapter
         Log.d("TAG",""+adapter.getItemCount());

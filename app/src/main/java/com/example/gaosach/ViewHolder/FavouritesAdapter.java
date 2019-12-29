@@ -26,10 +26,9 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder
     private Context context;
     private List<Favourites> favouritesList;
 
-    public FavouritesAdapter(Context context,List<Favourites> favouritesList){
-        this.context= context;
-        this.favouritesList= favouritesList;
-
+    public FavouritesAdapter(Context context, List<Favourites> favouritesList) {
+        this.context = context;
+        this.favouritesList = favouritesList;
     }
 
     @NonNull
@@ -43,7 +42,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder
     @Override
     public void onBindViewHolder(@NonNull FavouritesViewHolder viewHolder, final int position) {
         viewHolder.rice_name.setText(favouritesList.get(position).getRiceName());
-        viewHolder.rice_price.setText(String.format("%s /kg",favouritesList.get(position).getRicePrice().toString()));
+        viewHolder.rice_price.setText(String.format("%s /kg", favouritesList.get(position).getRicePrice().toString()));
         Picasso.with(context).load(favouritesList.get(position).getRiceImage())
                 .into(viewHolder.rice_image);
 

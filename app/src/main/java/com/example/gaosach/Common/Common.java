@@ -1,7 +1,9 @@
 package com.example.gaosach.Common;
 
+import com.example.gaosach.Model.Request;
 import com.example.gaosach.Model.User;
 import com.example.gaosach.Remote.APIService;
+import com.example.gaosach.Remote.FCMRetroClient;
 import com.example.gaosach.Remote.RetrofitClient;
 
 import java.util.Calendar;
@@ -11,8 +13,10 @@ public class Common {
     public static User currentUser;
 
     public static String topicName="News";
+    public static Request currentRequest;
 
     public static String PHONE_TEXT="userPhone";
+    public static final String fcmUrl= "https://fcm.googleapis.com/";
 
     public static final String INSERT_RICE_ID="RiceId";
     private static final String BASE_URL="https://fcm.googleapis.com/";
@@ -21,6 +25,12 @@ public class Common {
     {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);
     }
+
+    public static APIService getFCMClient(){
+        return FCMRetroClient.getClient(fcmUrl).create(APIService.class);
+    }
+
+
 
 //<<<<<<< HEAD
 
