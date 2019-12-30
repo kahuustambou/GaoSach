@@ -243,7 +243,7 @@ public class SignIn extends AppCompatActivity {
 
         final AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setTitle("Quên mật khẩu");
-        builder.setMessage("Nhập mã nguồn của bạn");
+        builder.setMessage("Nhập mã của bạn");
 
 
         LayoutInflater inflater= this.getLayoutInflater();
@@ -266,7 +266,7 @@ public class SignIn extends AppCompatActivity {
                         User user= dataSnapshot.child(edtPhone.getText().toString())
                                 .getValue(User.class);
 
-                        if(user.getSourceCode().equals(edtSourceCode.getText().toString()))
+                        if(user.getCode().equals(edtSourceCode.getText().toString()))
                             Toast.makeText(SignIn.this,"Mật khẩu của bạn: "+ user.getPassword(),Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(SignIn.this,"Sai mã nguồn",Toast.LENGTH_SHORT).show();
