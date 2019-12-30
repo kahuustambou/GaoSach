@@ -264,7 +264,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     //chi chay khi lay ket qua
 
-//                                 if(response.code()== 200) {
+                                 if(response.code()== 200) {
                                      if (response.body().success == 1) {
                                          Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
                                          finish();
@@ -273,6 +273,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
                                      }
+                                 }
 
                                 }
 

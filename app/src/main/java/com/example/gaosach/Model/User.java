@@ -77,6 +77,7 @@ public class User {
         result.put("name", name);
         result.put("phone", phone);
         result.put("password", password);
+        result.put("code", code);
         result.put("isStaff", isStaff);
         return result;
     }

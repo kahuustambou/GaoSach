@@ -1,14 +1,11 @@
 package com.example.gaosach;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -46,8 +43,9 @@ public class SignIn extends AppCompatActivity {
     private boolean isRemembered, isClickedSignIn;
     private boolean isValidPhoneNumber, isValidPassword;
 
+    private Context currentContext;
+
     //declare an instance of firebase
-    private FirebaseDatabase database;
     private DatabaseReference userReference;
     private ValueEventListener signInEventListener;
     private ProgressDialog mDialog;
@@ -69,33 +67,26 @@ public class SignIn extends AppCompatActivity {
 
         edtPassword = findViewById(R.id.edtPassword);
         edtPhone = findViewById(R.id.edtPhone);
-
         notHaveAccount = findViewById(R.id.nothave_account);
         btnSignIn = findViewById(R.id.btnSignIn);
         txtRememberMe = findViewById(R.id.rememberMe);
-        txtForgetpw= findViewById(R.id.txtForgetpw);
+        txtForgetpw = findViewById(R.id.txtForgetpw);
         isRemembered = false;
         isClickedSignIn = false;
         isValidPhoneNumber = false;
         isValidPassword = false;
 
-
         // Init Paper
         Paper.init(this);
-        database = FirebaseDatabase.getInstance();
-        userReference = database.getReference("User");
-
+        userReference = FirebaseDatabase.getInstance().getReference("User");
 
 
         txtForgetpw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(SignIn.this, SignUp.class));
-                showForgotPwdDialog();
+                startActivity(new Intent(SignIn.this, ForgotPassword.class));
             }
         });
-
-
 
         activeSignInButton(false);
         edtPhone.addTextChangedListener(signInTextWatcher);
@@ -134,7 +125,7 @@ public class SignIn extends AppCompatActivity {
 
     private void activeSignInButton(boolean isEnable) {
         btnSignIn.setEnabled(isEnable);
-        if(!isEnable) {
+        if (!isEnable) {
             btnSignIn.setBackgroundResource(R.drawable.reg_btn_inactive);
         } else {
             btnSignIn.setBackgroundResource(R.drawable.reg_btnsignin);
@@ -144,7 +135,6 @@ public class SignIn extends AppCompatActivity {
     private TextWatcher signInTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -182,18 +172,12 @@ public class SignIn extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
 
         }
-
     };
 
     private void signIn(final String phoneNumber, final String password, final Context context) {
         mDialog = new ProgressDialog(context);
         mDialog.setMessage("Vui lòng đợi...");
         mDialog.show();
-
-
-
-
-
 
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -215,13 +199,14 @@ public class SignIn extends AppCompatActivity {
 
                         if (isClickedSignIn) {
                             // Navigate to Home
-//                            userReference.removeEventListener(signInEventListener);
                             startActivity(new Intent(context, Home.class));
                             finish();
-
                         }
-                        userReference.removeEventListener(this);
-
+                    } else if (user.getCode().equals(password)) {
+                        // Save current user
+                        Common.currentUser = user;
+                        startActivity(new Intent(context, ChangePassword.class));
+                        finish();
                     } else {
                         Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
                     }
@@ -238,61 +223,6 @@ public class SignIn extends AppCompatActivity {
             }
         });
     }
-
-    private void showForgotPwdDialog() {
-
-        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
-        builder.setTitle("Quên mật khẩu");
-        builder.setMessage("Nhập mã của bạn");
-
-
-        LayoutInflater inflater= this.getLayoutInflater();
-        View forgot_view= inflater.inflate(R.layout.forgot_password,null);
-
-        builder.setView(forgot_view);
-        builder.setIcon(R.drawable.ic_security_black_24dp);
-
-        final EditText edtPhone= (EditText)forgot_view.findViewById(R.id.edtNumberPhone);
-        final EditText edtSourceCode= (EditText)forgot_view.findViewById(R.id.edtsourceCode);
-
-        builder.setPositiveButton("ĐÚNG", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                userReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        User user= dataSnapshot.child(edtPhone.getText().toString())
-                                .getValue(User.class);
-
-                        if(user.getCode().equals(edtSourceCode.getText().toString()))
-                            Toast.makeText(SignIn.this,"Mật khẩu của bạn: "+ user.getPassword(),Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(SignIn.this,"Sai mã nguồn",Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
-            }
-        });
-        builder.setNegativeButton("SAI", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface1, int i) {
-
-            }
-        });
-        builder.show();
-
-
-    }
-
 
     @Override
     protected void onDestroy() {
