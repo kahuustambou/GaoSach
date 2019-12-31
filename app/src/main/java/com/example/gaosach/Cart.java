@@ -50,11 +50,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.example.gaosach.Common.Common.nextIntent;
+import static com.example.gaosach.ForgotPassword.sendNotification;
 
 public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
     RecyclerView recyclerView;
@@ -87,49 +91,48 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/BreeSerif.otf")
-        .setFontAttrId(R.attr.fontPath)
-        .build());
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
 
         setContentView(R.layout.activity_cart);
 
         //init service
-        mService= Common.getFCMService();
+        mService = Common.getFCMService();
 
-        rootLayout= (RelativeLayout)findViewById(R.id.rootLayout);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
 
 
         //firebase
-        database= FirebaseDatabase.getInstance();
-        requests= database.getReference("Requests");
+        database = FirebaseDatabase.getInstance();
+        requests = database.getReference("Requests");
 
         //init
-        recyclerView= (RecyclerView) findViewById(R.id.listCart);
+        recyclerView = (RecyclerView) findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
-        layoutManager= new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         //swipe to delete
-        ItemTouchHelper.SimpleCallback itemTouchHelperCalback= new RecycleItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCalback = new RecycleItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCalback).attachToRecyclerView(recyclerView);
 
-        txtTotalPrice= (TextView)findViewById(R.id.txtTotalPrice);
-        btnPlaceOrder=(Button) findViewById(R.id.btnPlaceOrder);
+        txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
+        btnPlaceOrder = (Button) findViewById(R.id.btnPlaceOrder);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               if(cart.size()>0)
-                   showAlerDialog();
-               else
-                   Toast.makeText(Cart.this,"Giỏ hàng của bạn trống",Toast.LENGTH_SHORT).show();
+                if (cart.size() > 0)
+                    showAlerDialog();
+                else
+                    Toast.makeText(Cart.this, "Giỏ hàng của bạn trống", Toast.LENGTH_SHORT).show();
 
             }
 
         });
-        
-        loadListRice();
 
+        loadListRice();
 
 
     }
@@ -152,44 +155,37 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 //    }
 
     private void showAlerDialog() {
-        AlertDialog.Builder alertDialog= new AlertDialog.Builder(Cart.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("Thêm một bước");
         alertDialog.setMessage("Nhập địa chỉ của bạn: ");
 
-        LayoutInflater inflater= this.getLayoutInflater();
-        View order_address_comment= inflater.inflate(R.layout.order_address_comment,null);
-     final MaterialEditText edtAddress= (MaterialEditText)order_address_comment.findViewById(R.id.edtAddress);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
+        final MaterialEditText edtAddress = (MaterialEditText) order_address_comment.findViewById(R.id.edtAddress);
 
 
-
-        final MaterialEditText edtComment= (MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+        final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
 
         //radio
-        final RadioButton rdiHomeAddress=(RadioButton)order_address_comment.findViewById(R.id.rdiHomeAddress);
+        final RadioButton rdiHomeAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiHomeAddress);
 
         //su kien cho radio
         rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(b)
-                {
-                    if(Common.currentUser.getHomeAddress()!= null ||
-                           !TextUtils.isEmpty(Common.currentUser.getHomeAddress()))
-                    {
+                if (b) {
+                    if (Common.currentUser.getHomeAddress() != null ||
+                            !TextUtils.isEmpty(Common.currentUser.getHomeAddress())) {
                         address = Common.currentUser.getHomeAddress();
 
                     }
 
 
-
-
-                    
                 }
 
             }
         });
-
 
 
         alertDialog.setView(order_address_comment);
@@ -214,110 +210,54 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
                 //submit den firebase
                 // chung ta su dung systerm.current den kry
-                String order_number= String.valueOf(System.currentTimeMillis());
+                String order_number = String.valueOf(System.currentTimeMillis());
                 requests.child(order_number)
                         .setValue(request);
 
                 //delete cart
                 new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
-                sendNotification(order_number);
-                Toast.makeText(Cart.this,"Cám ơn bạn đã đặt hàng thành công",Toast.LENGTH_SHORT).show();
-                Intent move= new Intent(Cart.this,Home.class);
+                // Pass data to intent
+                nextIntent = new Intent(getApplicationContext(), Cart.class);
+                Notification notification = new Notification("Gạo Việt", "Bạn có một đơn hàng mới " + order_number);
+                sendNotification(Cart.this, null, notification, true);
+                Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                Intent move = new Intent(Cart.this, Home.class);
                 startActivity(move);
-
-//
             }
         });
         alertDialog.setNegativeButton("KHÔNG", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-
-
             }
         });
         alertDialog.show();
-
-
-
-    }
-
-    private void sendNotification(final String order_number) {
-
-        DatabaseReference tokens= FirebaseDatabase.getInstance().getReference("Tokens");
-        Query data= tokens.orderByChild("isServerToken").equalTo(true);//lay tat ca cac isServerToken là đúng
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
-                    Token serverToken= postSnapShot.getValue(Token.class);
-
-                    //create raw payload tosend
-                    Notification notification= new Notification("Gạo Việt","Bạn có một đơn hàng mới "+order_number);
-                    Sender content = new Sender(serverToken.getToken(),notification);
-                    mService.sendNotification(content)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    //chi chay khi lay ket qua
-
-                                 if(response.code()== 200) {
-                                     if (response.body().success == 1) {
-                                         Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
-                                         finish();
-                                     } else {
-                                         Toast.makeText(Cart.this, "Thất bại!!!", Toast.LENGTH_SHORT).show();
-
-
-                                     }
-                                 }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-                                    Log.e("Lỗi",t.getMessage());
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void loadListRice() {
-        cart= new Database(this).getCarts(Common.currentUser.getPhone());
-        adapter= new CartAdapter(cart,this);
+        cart = new Database(this).getCarts(Common.currentUser.getPhone());
+        adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         //tinh tong cong tien
 
-        int total=0;
+        int total = 0;
 
-        for (Order order:cart)
-            total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
-        Locale locale= new Locale("vie","VN");
+        for (Order order : cart)
+            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+        Locale locale = new Locale("vie", "VN");
 //        NumberFormat fmt= NumberFormat.getCurrencyInstance();
-        NumberFormat fmt= NumberFormat.getNumberInstance();
+        NumberFormat fmt = NumberFormat.getNumberInstance();
 
 
         txtTotalPrice.setText(fmt.format(total));
-
-
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if(viewHolder instanceof CartViewHolder) {
+        if (viewHolder instanceof CartViewHolder) {
             String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
             final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
 

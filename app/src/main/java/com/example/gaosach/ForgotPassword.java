@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -97,9 +97,10 @@ public class ForgotPassword extends AppCompatActivity {
                     List<String> recipientIds = new ArrayList<String>();
                     recipientIds.add(currentUser.getPhone());
 
+                    // Pass data to intent
                     nextIntent = new Intent(ForgotPassword.this, SignIn.class);
                     nextIntent.putExtra("AuthenticationCode", code);
-                    sendNotification(currentContext, recipientIds, message, nextIntent);
+                    sendNotification(currentContext, recipientIds, message, false);
                     btnSendCode.setText("Gửi lại");
                     userReference.removeEventListener(this);
                 } catch (Exception exception) {
@@ -113,50 +114,85 @@ public class ForgotPassword extends AppCompatActivity {
         });
     }
 
-    public void sendNotification(final Context context, final List<String> recipientPhoneNumbers, final Notification notification, final Intent intent) {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+    public static void sendNotification(final Context context, final List<String> recipientPhoneNumbers, final Notification notification, final boolean isSendToAdmin) {
         final APIService mService;
         mService = Common.getFCMService();
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
 
-        tokens.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (int index = 0; index < recipientPhoneNumbers.size(); ++index) {
-                    if (!dataSnapshot.hasChild(recipientPhoneNumbers.get(index))) {
-                        continue;
-                    }
+        if (!isSendToAdmin) {
+            tokens.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (int index = 0; index < recipientPhoneNumbers.size(); ++index) {
+                        if (!dataSnapshot.hasChild(recipientPhoneNumbers.get(index))) {
+                            continue;
+                        }
 
-                    Token tokenItem = dataSnapshot.child(recipientPhoneNumbers.get(index)).getValue(Token.class);
-                    Sender content = new Sender(tokenItem.getToken(), notification);
-                    if(intent != null) {
-                        nextIntent = intent;
-                    }
-
-                    mService.sendNotification(content)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if (response.code() == 200) {
-                                        if (response.body().success == 1) {
-                                            Log.e("--Message--", "Successful");
-                                        } else {
-                                            Log.e("--Message--", "Failed");
+                        Token tokenItem = dataSnapshot.child(recipientPhoneNumbers.get(index)).getValue(Token.class);
+                        Sender content = new Sender(tokenItem.getToken(), notification);
+                        mService.sendNotification(content)
+                                .enqueue(new Callback<MyResponse>() {
+                                    @Override
+                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                        if (response.code() == 200) {
+                                            if (response.body().success == 1) {
+                                                Log.e("--Message--", "Successful");
+                                            } else {
+                                                Log.e("--Message--", "Failed");
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-                                    Log.e("--Message--", t.getMessage());
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                                        Log.e("--Message--", t.getMessage());
+                                    }
+                                });
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("--Message--", databaseError.getMessage());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("--Message--", databaseError.getMessage());
+                }
+            });
+        } else {
+            Query data = tokens.orderByChild("serverToken").equalTo(true);//lay tat ca cac isServerToken là đúng
+            data.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+                        Token serverToken = postSnapShot.getValue(Token.class);
+
+                        //create raw payload to send
+                        Sender content = new Sender(serverToken.getToken(), notification);
+                        mService.sendNotification(content)
+                                .enqueue(new Callback<MyResponse>() {
+                                    @Override
+                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                        if (response.code() == 200) {
+                                            if (response.body().success == 1) {
+                                                Toast.makeText(context, "Cám ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, "Thất bại!!!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                                        Log.e("--Message--", t.getMessage());
+
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }
