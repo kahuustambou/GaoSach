@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class ChangePassword extends AppCompatActivity {
         edtRepeatedPassword = findViewById(R.id.edtRepeatedPassword);
         btnChange = findViewById(R.id.btnChange);
         isValidCurrentPassword = isValidNewPassword = isValidRepeatedPassword = false;
+        onNewIntent(getIntent());
 
         edtCurrentPassword.addTextChangedListener(textWatcher);
         edtNewPassword.addTextChangedListener(textWatcher);
@@ -39,11 +41,23 @@ public class ChangePassword extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currentUser.setPassword(edtNewPassword.getText().toString());
-                updateUser(currentUser, ChangePassword.this);
+                updateUser(currentUser, ChangePassword.this, null, null);
                 Toast.makeText(ChangePassword.this, "Đã cập nhật", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(ChangePassword.this, Home.class));
             }
         });
+    }
+
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("AuthenticationCode")) {
+                String authenticationCode = extras.getString("AuthenticationCode");
+                Log.d("--Message--", "onNewIntent: co neh " + authenticationCode);
+                edtCurrentPassword.setText(authenticationCode);
+            }
+        }
     }
 
     private TextWatcher textWatcher = new TextWatcher() {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -42,12 +43,10 @@ public class SignIn extends AppCompatActivity {
 
     private boolean isRemembered, isClickedSignIn;
     private boolean isValidPhoneNumber, isValidPassword;
-
-    private Context currentContext;
+    private String authenticationCode;
 
     //declare an instance of firebase
     private DatabaseReference userReference;
-    private ValueEventListener signInEventListener;
     private ProgressDialog mDialog;
 
 
@@ -59,6 +58,7 @@ public class SignIn extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/BreeSerif.otf")
                 .setFontAttrId(R.attr.fontPath)
@@ -75,11 +75,11 @@ public class SignIn extends AppCompatActivity {
         isClickedSignIn = false;
         isValidPhoneNumber = false;
         isValidPassword = false;
+        onNewIntent(getIntent());
 
         // Init Paper
         Paper.init(this);
         userReference = FirebaseDatabase.getInstance().getReference("User");
-
 
         txtForgetpw.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +121,18 @@ public class SignIn extends AppCompatActivity {
         // Init dialog
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Đăng Nhập ...");
+    }
+
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("AuthenticationCode")) {
+                authenticationCode = extras.getString("AuthenticationCode");
+                Log.d("--Message--", "onNewIntent: co neh " + authenticationCode);
+                edtPassword.setText(authenticationCode);
+            }
+        }
     }
 
     private void activeSignInButton(boolean isEnable) {
@@ -205,7 +217,9 @@ public class SignIn extends AppCompatActivity {
                     } else if (user.getCode().equals(password)) {
                         // Save current user
                         Common.currentUser = user;
-                        startActivity(new Intent(context, ChangePassword.class));
+                        Intent intent = new Intent(context, ChangePassword.class);
+                        intent.putExtra("AuthenticationCode", authenticationCode);
+                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(context, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
