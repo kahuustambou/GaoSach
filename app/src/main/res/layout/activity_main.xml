@@ -7,6 +7,16 @@
     android:background="@drawable/background"
     tools:context=".MainActivity">
 
+<!--    <ImageView-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:src="@drawable/logoapp"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        >-->
+
+<!--    </ImageView>-->
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_centerInParent="true"
@@ -14,14 +24,14 @@
         android:layout_height="wrap_content">
 
 
+
         <ImageView
-            android:layout_marginBottom="30sp"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/sologan"/>
+            android:layout_marginBottom="30sp"
+            android:src="@drawable/sologan" />
 
-<!--        <TextView-->
+        <!--        <TextView-->
 <!--            android:textSize="25dp"-->
 <!--            android:layout_gravity="center"-->
 <!--            android:id="@+id/txtSologan"-->

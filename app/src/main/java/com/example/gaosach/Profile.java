@@ -17,13 +17,18 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.example.gaosach.Common.Common.PASSWORD_KEY;
+import static com.example.gaosach.Common.Common.USER_KEY;
 import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.Common.Validator.isPhoneNumber;
@@ -68,19 +73,18 @@ public class Profile extends AppCompatActivity {
             public void onClick(View v) {
                 String fullName = edtFullName.getText().toString().trim();
                 String phoneNumber = edtPhoneNumber.getText().toString().trim();
-                Log.d("pwd", "onClick: " + currentUser.getPassword());
                 if (checkValidInputs(fullName, phoneNumber)) {
                     try {
                         User user = new User();
+                        user.setIsStaff(currentUser.getIsStaff());
+                        user.setCode(currentUser.getCode());
+                        user.setPassword(currentUser.getPassword());
                         user.setName(fullName);
                         user.setPhone(phoneNumber);
-                        user.setPassword(currentUser.getPassword());
-                        updateUser(user);
+                        updateUser(user, Profile.this, null, null);
                     } catch (Exception exception) {
                         Log.d("loineh", exception.getMessage());
                     }
-
-//                    setEditable(false);
                 }
             }
         });
@@ -119,28 +123,41 @@ public class Profile extends AppCompatActivity {
             edtPhoneNumber.requestFocus();
             return false;
         }
+
         return true;
     }
 
-    public void updateUser(User user) {
-        Map<String, Object> childUpdates = new HashMap<>();
+    public static void updateUser(User user, final Context context, final String successMessage, final String failureMessage) {
+        final Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(user.getPhone(), user.toMap());
-        database.updateChildren(childUpdates)
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("User");
+        userReference.updateChildren(childUpdates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Profile.this, "Thay đổi thành công", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, isEmpty(successMessage) ? "Thay đổi thành công." : successMessage, Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Profile.this, "Thay đổi thất bại", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, isEmpty(failureMessage) ? "Thay đổi thất bại." : failureMessage, Toast.LENGTH_LONG).show();
                     }
                 });
 
-        if(!user.getPhone().equals(currentUser.getPhone())) {
-            database.child(currentUser.getPhone()).setValue(null);
+        if(!isEmpty(currentUser.getPhone())) {
+            if (!user.getPhone().equals(currentUser.getPhone())) {
+                userReference.child(currentUser.getPhone()).setValue(null);
+                currentUser = user;
+                Paper.init(context);
+                Paper.book().write(USER_KEY, currentUser.getPhone());
+                Paper.book().write(PASSWORD_KEY, currentUser.getPassword());
+            }
+        } else {
+            currentUser = user;
+            Paper.init(context);
+            Paper.book().write(USER_KEY, currentUser.getPhone());
+            Paper.book().write(PASSWORD_KEY, currentUser.getPassword());
         }
     }
 }

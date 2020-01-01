@@ -71,9 +71,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     CounterFab fab;
 
     //slider
-    HashMap<String,String> image_list;
+    HashMap<String, String> image_list;
     SliderLayout mSlider;
-
 
 
     @Override
@@ -99,12 +98,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setSupportActionBar(toolbar);
 
         //view
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark
-                );
+        );
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -121,7 +120,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
 
-
         //Init firebase
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
@@ -129,7 +127,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // Init Paper
         Paper.init(this);
 
-        fab =(CounterFab) findViewById(R.id.fab);
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +136,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -169,7 +167,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setHasFixedSize(true);
 //        layoutManager = new LinearLayoutManager(this);
 //        recycler_menu.setLayoutManager(layoutManager);
-        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
+        recycler_menu.setLayoutManager(new GridLayoutManager(this, 2));
 
 
 //        loadMenu();
@@ -186,46 +184,44 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void setupSlider() {
-        mSlider= (SliderLayout)findViewById(R.id.slider);
-        image_list= new HashMap<>();
+        mSlider = (SliderLayout) findViewById(R.id.slider);
+        image_list = new HashMap<>();
 
-        final DatabaseReference banner= database.getReference("Banner");
+        final DatabaseReference banner = database.getReference("Banner");
         banner.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
-                    Banner banner= postSnapShot.getValue(Banner.class);
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+                    Banner banner = postSnapShot.getValue(Banner.class);
 
                     //show discreption when click
-                    image_list.put(banner.getName()+"_"+banner.getId(),banner.getImage());
+                    image_list.put(banner.getName() + "_" + banner.getId(), banner.getImage());
                 }
-                for(String key:image_list.keySet())
-                {
-                    String[] keySplit= key.split("_");
-                    String nameOfRice= keySplit[0];
-                    String idOfRice= keySplit[1];
+                for (String key : image_list.keySet()) {
+                    String[] keySplit = key.split("_");
+                    String nameOfRice = keySplit[0];
+                    String idOfRice = keySplit[1];
 
                     //create slider
-                    final TextSliderView textSliderView= new TextSliderView(getBaseContext());
+                    final TextSliderView textSliderView = new TextSliderView(getBaseContext());
                     textSliderView
                             .description(nameOfRice)
                             .image(image_list.get(key))
-                            .setScaleType(BaseSliderView.ScaleType.Fit)
-                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                                @Override
-                                public void onSliderClick(BaseSliderView slider) {
-                                    Intent intent= new Intent(Home.this,RiceDetail.class);
-                                    //we will send food id to ridedetail
-                                    intent.putExtras(textSliderView.getBundle());
-                                    startActivity(intent);
-                                }
-                            });
+                            .setScaleType(BaseSliderView.ScaleType.Fit);
+//                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+//                                @Override
+//                                public void onSliderClick(BaseSliderView slider) {
+//                                    Intent intent= new Intent(Home.this,RiceDetail.class);
+//                                    //we will send food id to ridedetail
+//                                    intent.putExtras(textSliderView.getBundle());
+//                                    startActivity(intent);
+//                                }
+//                            });
 
                     //add extra bundle
                     textSliderView.bundle(new Bundle());
-                    textSliderView.getBundle().putString("RiceId",idOfRice);
+                    textSliderView.getBundle().putString("RiceId", idOfRice);
 
                     mSlider.addSlider(textSliderView);
 
@@ -249,16 +245,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCart());
-        if(adapter!=null)
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        if (adapter != null)
             adapter.startListening();
     }
 
     private void updateToken(String token) {
 
-        FirebaseDatabase db= FirebaseDatabase.getInstance();
-        DatabaseReference tokens= db.getReference("Tokens");
-        Token data = new Token(token,false);//false vì token tu nguoi dung
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token, false);//false vì token tu nguoi dung
         tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
@@ -326,11 +322,23 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 //    public boolean onOptionsItemSelect(MenuItem item) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
+//        if (id == R.id.menu_search) {
+//            Intent serch= new Intent(Home.this,SearchActivity.class);
+//            startActivity(serch);
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_search) {
+            Intent search = new Intent(Home.this, SearchActivity.class);
+            startActivity(search);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -341,26 +349,29 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_profile) {
             navigateToWidget(Profile.class);
 
-        } else if (id == R.id.nav_cart) {
-            navigateToWidget(Cart.class);
-
+//        } else if (id == R.id.nav_cart) {
+//            navigateToWidget(Cart.class);
+//
         } else if (id == R.id.nav_order) {
             navigateToWidget(OrderStatus.class);
 
         } else if (id == R.id.nav_contact) {
             navigateToWidget(Contact.class);
         } else if (id == R.id.nav_signout) {
-             // Delete local user
+            // Delete local user
             Paper.book().destroy();
 
             // Sign out
             Intent signIn = new Intent(Home.this, SignIn.class);
-            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
-        }
-        else if(id==R.id.nav_change_pwd){
+        } else if (id == R.id.nav_change_pwd) {
 
             showChangePasswordDialog();
+
+        } else if (id == R.id.nav_favourites) {
+
+            startActivity(new Intent(Home.this, FavouritesActivity.class));
 
         }
 
@@ -370,12 +381,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return false;
     }
 
+
     private void showHomeAddressDialog() {
-        AlertDialog.Builder alerDialog= new AlertDialog.Builder(Home.this);
+        AlertDialog.Builder alerDialog = new AlertDialog.Builder(Home.this);
         alerDialog.setTitle("Thay đổi địa chỉ vận chuyển");
         alerDialog.setMessage("Vui lòng điền đầy đủ thông tin");
 
-        LayoutInflater inflater= LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
 //        View layout_home= inflater.inflate(R.layout.home_address_layout,null);
 //
 //        final MaterialEditText edtHomeAddress=(MaterialEditText)layout_home.findViewById(R.id.edtHomeAddress);
@@ -406,16 +418,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void showChangePasswordDialog() {
-        AlertDialog.Builder alerDialog= new AlertDialog.Builder(Home.this);
+        AlertDialog.Builder alerDialog = new AlertDialog.Builder(Home.this);
         alerDialog.setTitle("Thay đổi mật khẩu");
         alerDialog.setMessage("Vui lòng điền đầy đủ thông tin");
 
-        LayoutInflater inflater= LayoutInflater.from(this);
-        View layout_pwd= inflater.inflate(R.layout.change_password_layout,null);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
 
-        final MaterialEditText edtPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtPassword);
-        final MaterialEditText edtNewPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtNewPassword);
-        final MaterialEditText edtRepeatPassword=(MaterialEditText)layout_pwd.findViewById(R.id.edtRepeatPassword);
+        final MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
+        final MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
+        final MaterialEditText edtRepeatPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatedPassword);
 
         alerDialog.setView(layout_pwd);
 
@@ -425,46 +437,40 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             public void onClick(DialogInterface dialog, int which) {
 
                 //thay doi password
-                final android.app.AlertDialog waitingDialog= new SpotsDialog(Home.this);
+                final android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
 
                 //ktra mat khau cu
-                if(edtPassword.getText().toString().equals(Common.currentUser.getPassword()))
-                {
-                    if(edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString()))
-                    {
-                        Map<String,Object> passwordUpdate= new HashMap<>();
-                        passwordUpdate.put("password",edtNewPassword.getText().toString());
+                if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())) {
+                    if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())) {
+                        Map<String, Object> passwordUpdate = new HashMap<>();
+                        passwordUpdate.put("password", edtNewPassword.getText().toString());
 
                         //make update
-                        DatabaseReference user= FirebaseDatabase.getInstance().getReference("User");
+                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
                         user.child(Common.currentUser.getPhone())
                                 .updateChildren(passwordUpdate)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         waitingDialog.dismiss();
-                                        Toast.makeText(Home.this,"Mật khẩu đã được thay đổi",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Home.this, "Mật khẩu đã được thay đổi", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Home.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
-                    }
-                    else
-                    {
+                    } else {
                         waitingDialog.dismiss();
-                        Toast.makeText(Home.this,"Mật khẩu mới không trùng khớp",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Home.this, "Mật khẩu mới không trùng khớp", Toast.LENGTH_SHORT).show();
                     }
 
-                }
-                else
-                {
+                } else {
                     waitingDialog.dismiss();
-                    Toast.makeText(Home.this,"Mật khẩu cũ sai",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "Mật khẩu cũ sai", Toast.LENGTH_SHORT).show();
                 }
             }
         });

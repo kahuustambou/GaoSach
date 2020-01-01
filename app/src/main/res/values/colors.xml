@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#FFD736</color>
+    <color name="colorAccent">#FA0404</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="btnSignUp">#4B9F4B</color>
@@ -14,6 +14,8 @@
     <color name="overlaybg">#7FCBE1E9</color>
     <color name="overlayActionBar">#FFFFFF</color>
     <color name="btnInactive">#E0E0E0</color>
+    <color name="bgrBackground">#FA315B</color>
+
 
 
 

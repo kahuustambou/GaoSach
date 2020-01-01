@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="170dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginTop="230dp"
+        android:layout_marginRight="10dp"
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtName"
@@ -22,7 +23,7 @@
             android:background="@drawable/reg_edtext_style"
             android:hint="Tên người dùng..."
             android:inputType="text"
-            android:padding="18dp"
+            android:padding="14sp"
             ></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -31,19 +32,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtPhone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/reg_edtext_style"
             android:hint="Nhập số điện thoại..."
             android:inputType="phone"
-            android:padding="18dp"
+            android:padding="14sp"
             ></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,6 +59,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:errorEnabled="true"
+        app:hintEnabled="false"
+        android:layout_marginTop="20dp"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -64,37 +70,37 @@
             android:background="@drawable/reg_edtext_style"
             android:hint="Mật khẩu"
             android:inputType="textPassword"
-            android:padding="18dp"
+            android:padding="14sp"
             ></com.google.android.material.textfield.TextInputEditText>
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/sourceCode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       android:layout_marginTop="385dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:layout_below="@+id/text_input_password"-->
+<!--        android:id="@+id/sourceCode"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginRight="10dp">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtsourceCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/reg_edtext_style"
-            android:hint="Nhập mã nguồn..."
-            android:inputType="text"
-            android:padding="18dp"
-            ></com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/edtsourceCode"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/reg_edtext_style"-->
+<!--            android:hint="Nhập mã nguồn..."-->
+<!--            android:inputType="text"-->
+<!--            android:padding="18dp"-->
+<!--            ></com.google.android.material.textfield.TextInputEditText>-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 
     <Button
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sourceCode"
+        android:layout_below="@+id/text_input_password"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="10dp"

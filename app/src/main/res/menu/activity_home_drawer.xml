@@ -15,10 +15,15 @@
             android:iconTint="@color/white"
             android:title="Chỉnh sửa thông tin" />
         <item
-            android:id="@+id/nav_cart"
-            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/ic_favorite_black_24dp"
             android:iconTint="@color/white"
-            android:title="Giỏ hàng" />
+            android:title="Yêu thích" />
+<!--        <item-->
+<!--            android:id="@+id/nav_cart"-->
+<!--            android:icon="@drawable/ic_shopping_cart_black_24dp"-->
+<!--            android:iconTint="@color/white"-->
+<!--            android:title="Giỏ hàng" />-->
         <item
             android:id="@+id/nav_order"
             android:icon="@drawable/ic_schedule_black_24dp"
@@ -32,6 +37,7 @@
             android:icon="@drawable/ic_security_black_24dp"
             android:iconTint="@color/white"
             android:title="Thay đổi mật khẩu" />
+
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_perm_contact_calendar_black_24dp"

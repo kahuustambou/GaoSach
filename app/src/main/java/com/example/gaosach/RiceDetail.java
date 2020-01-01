@@ -16,6 +16,8 @@ import com.example.gaosach.Database.Database;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Rating;
 import com.example.gaosach.Model.Rice;
+import com.example.gaosach.ViewHolder.RiceViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -34,6 +36,7 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -53,6 +56,9 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     DatabaseReference ratingTbl;
     Rice currentRice;
     TextView txtShowComment;
+    CounterFab fab;
+
+    FirebaseRecyclerAdapter<Rice, RiceViewHolder> adapter;
 
 
 
@@ -87,6 +93,21 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
         rices= database.getReference("Rices");
         ratingTbl= database.getReference("Rating");
 
+//        //Init Paper
+//        Paper.init(this);
+//
+//        fab =(CounterFab) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent cartIntent = new Intent(RiceDetail.this, Cart.class);
+//                startActivity(cartIntent);
+//            }
+//        });
+//
+//        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+
+
         //Init view
         numberButton=(ElegantNumberButton)findViewById(R.id.number_button);
         btnCart=(CounterFab) findViewById(R.id.btnCart);
@@ -97,6 +118,21 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
         rice_price= (TextView)findViewById(R.id.rice_price);
         rice_name= (TextView)findViewById(R.id.rice_name);
         rice_image= (ImageView)findViewById(R.id.rice_image);
+
+        //Init Paper
+        Paper.init(this);
+
+        fab =(CounterFab) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent = new Intent(RiceDetail.this, Cart.class);
+                startActivity(cartIntent);
+            }
+        });
+
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +146,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View view) {
                 new Database(getBaseContext()).addToCart(new Order(
+                        Common.currentUser.getPhone(),
                         riceId,
                         currentRice.getName(),
                         numberButton.getNumber(),
@@ -120,7 +157,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             }
         });
-        btnCart.setCount(new Database(this).getCountCart());
+//        btnCart.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
 
         collapsingToolbarLayout= (CollapsingToolbarLayout)findViewById(R.id.collapsing);
@@ -203,7 +240,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
 //
                 //lay image
-                Picasso.with(getBaseContext()).load(currentRice .getImage())
+                Picasso.with(getBaseContext()).load(currentRice.getImage())
                         .into(rice_image);
 
                 collapsingToolbarLayout.setTitle(currentRice.getName());
@@ -225,6 +262,14 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     public void onNegativeButtonClicked() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        if(adapter!=null)
+            adapter.startListening();
     }
 
     @Override

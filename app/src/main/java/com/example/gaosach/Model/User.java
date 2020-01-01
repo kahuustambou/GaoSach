@@ -7,28 +7,28 @@ public class User {
     private String name;
     private String phone;
     private String password;
-    private String sourceCode;
+    private String code;
     private String homeAddress;
     private boolean isStaff = false;
 
     public User() {
     }
 
-    public User(String name, String phone, String password, boolean isStaff, String sourceCode) {
+    public User(String name, String phone, String password, boolean isStaff, String code) {
         this.name = name;
         this.phone = phone;
         this.password = password;
         this.isStaff = isStaff;
-        this.sourceCode= sourceCode;
+        this.code = code;
 
     }
 
-    public String getSourceCode() {
-        return sourceCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setSourceCode(String sourceCode) {
-        this.sourceCode = sourceCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -77,6 +77,7 @@ public class User {
         result.put("name", name);
         result.put("phone", phone);
         result.put("password", password);
+        result.put("code", code);
         result.put("isStaff", isStaff);
         return result;
     }

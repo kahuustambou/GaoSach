@@ -28,6 +28,7 @@ tools:context=".RiceList">
     </com.mancj.materialsearchbar.MaterialSearchBar>
 
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/searchBar"
         android:id="@+id/recycle_rice"
@@ -35,7 +36,28 @@ tools:context=".RiceList">
         android:layout_height="match_parent"
         android:scrollbars="vertical">
 
+
+
+
+
     </androidx.recyclerview.widget.RecyclerView>
+        <com.andremion.counterfab.CounterFab
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="@color/white"
+            android:textAlignment="viewEnd"
+            app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
+
+
+
     </RelativeLayout>
+
+
+
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

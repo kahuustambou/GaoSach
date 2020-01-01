@@ -13,19 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
-<!--        <service android:name=".MyFirebaseIdService"-->
-<!--            android:exported="true"></service>-->
-=======
-        <activity android:name=".ShowComment"></activity>
-
-        <service
-            android:name=".MyFirebaseIdService"
-            android:exported="true" />
->>>>>>> a9738c92ceedd27d5dbb3ead4242571090d13038
-
+        <activity android:name=".ChangePassword"></activity>
+        <activity android:name=".ForgotPassword" />
+        <activity android:name=".OrderDetail" />
+        <activity android:name=".FavouritesActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".ShowComment" /> <!-- <service -->
+        <!-- android:name=".MyFirebaseIdService" -->
+        <!-- android:exported="true" /> -->
         <activity android:name=".Profile" />
-        <activity android:name=".Contact" /> <!-- <activity android:name=".ForgotPassword" /> -->
+        <activity android:name=".Contact" />
         <activity android:name=".SignIn" />
         <activity android:name=".OrderStatus" />
         <activity android:name=".Cart" />
@@ -54,7 +51,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Service.MyfirebaseMessaging">
+        <service android:name=".Service.MyFirebaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
