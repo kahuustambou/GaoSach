@@ -363,7 +363,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             // Sign out
             Intent signIn = new Intent(Home.this, SignIn.class);
-//            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
         } else if (id == R.id.nav_change_pwd) {
 
@@ -423,9 +423,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         alerDialog.setMessage("Vui lòng điền đầy đủ thông tin");
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
+        View layout_pwd = inflater.inflate(R.layout.change_password, null);
 
-        final MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
+        final MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtCurrentPassword);
         final MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
         final MaterialEditText edtRepeatPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatedPassword);
 
@@ -470,7 +470,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
                 } else {
                     waitingDialog.dismiss();
-                    Toast.makeText(Home.this, "Mật khẩu cũ sai", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Home.this, "Mật khẩu cũ sai", Toast.LENGTH_SHORT).show();
                 }
             }
         });

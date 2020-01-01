@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,23 +19,16 @@ import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Helper.RecycleItemTouchHelper;
 import com.example.gaosach.Interface.RecycleItemTouchHelperListener;
-import com.example.gaosach.Model.MyResponse;
 import com.example.gaosach.Model.Notification;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Request;
-import com.example.gaosach.Model.Sender;
-import com.example.gaosach.Model.Token;
 import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.ViewHolder.CartAdapter;
 import com.example.gaosach.ViewHolder.CartViewHolder;
 import com.google.android.gms.location.places.Place;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
@@ -44,16 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -218,7 +205,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
                 // Pass data to intent
-                nextIntent = new Intent(getApplicationContext(), Cart.class);
+                nextIntent = new Intent(getApplicationContext(), OrderStatus.class);
                 Notification notification = new Notification("Gạo Việt", "Bạn có một đơn hàng mới " + order_number);
                 sendNotification(Cart.this, null, notification, true);
                 Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng thành công", Toast.LENGTH_SHORT).show();

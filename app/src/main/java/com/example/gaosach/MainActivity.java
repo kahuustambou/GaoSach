@@ -25,7 +25,6 @@ import static com.example.gaosach.Common.Common.PASSWORD_KEY;
 import static com.example.gaosach.Common.Common.USER_KEY;
 import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
-import static com.example.gaosach.R.layout.activity_main;
 
 public class MainActivity extends AppCompatActivity {
     Button btnSignIn, btnSignUp;
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent signIn = new Intent(MainActivity.this, SignIn.class);
                 startActivity(signIn);
+                finish();
             }
         });
 
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent signUp = new Intent(MainActivity.this, SignUp.class);
                 startActivity(signUp);
+                finish();
             }
         });
     }
