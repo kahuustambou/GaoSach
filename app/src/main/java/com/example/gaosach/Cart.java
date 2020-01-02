@@ -65,6 +65,8 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
     RelativeLayout rootLayout;
 
+
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -140,6 +142,10 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 //        loadListRice();
 //
 //    }
+
+
+
+
 
     private void showAlerDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);

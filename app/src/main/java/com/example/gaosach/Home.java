@@ -363,7 +363,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             // Sign out
             Intent signIn = new Intent(Home.this, SignIn.class);
-            signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(signIn);
         } else if (id == R.id.nav_change_pwd) {
 
