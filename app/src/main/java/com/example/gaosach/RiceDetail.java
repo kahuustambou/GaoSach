@@ -145,16 +145,35 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Database(getBaseContext()).addToCart(new Order(
-                        Common.currentUser.getPhone(),
-                        riceId,
-                        currentRice.getName(),
-                        numberButton.getNumber(),
-                        currentRice.getPrice(),
-                        currentRice.getDiscount(),
-                        currentRice.getImage()
-                ));
-                Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+//                new Database(getBaseContext()).addToCart(new Order(
+//                        Common.currentUser.getPhone(),
+//                        riceId,
+//                        currentRice.getName(),
+//                        numberButton.getNumber(),
+//                        currentRice.getPrice(),
+//                        currentRice.getDiscount(),
+//                        currentRice.getImage()
+//                ));
+//                Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                boolean isExits = new Database(getBaseContext()).checkRiceDetail(riceId, Common.currentUser.getPhone());
+                if (!isExits) {
+                    new Database(getBaseContext()).addToCart(new Order(
+                            Common.currentUser.getPhone(),
+                            riceId,
+                            currentRice.getName(),
+                            "1",
+                            currentRice.getPrice(),
+                            currentRice.getDiscount(),
+                            currentRice.getImage()
+                    ));
+                } else {
+
+                    new Database(getBaseContext()).increaseCart(Common.currentUser.getPhone(), riceId);
+
+
+                }
+
+                Toast.makeText(RiceDetail.this, "Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             }
         });
 //        btnCart.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));

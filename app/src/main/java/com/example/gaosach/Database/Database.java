@@ -34,6 +34,21 @@ public class Database extends SQLiteAssetHelper {
         cursor.close();
         return flag;
     }
+    public boolean checkRiceDetail(String riceId,String userPhone)
+    {
+        boolean flag= false;
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= null;
+        String SQLQuery= String.format("SELECT * From OrderDetail WHERE UserPhone='%s' AND ProductId='%s'",userPhone,riceId);
+        cursor= db.rawQuery(SQLQuery,null);
+        if(cursor.getCount()>0)
+            flag= true;
+        else
+            flag= false;
+        cursor.close();
+        return flag;
+    }
+
 
     public List<Order> getCarts(String userPhone)
     {
