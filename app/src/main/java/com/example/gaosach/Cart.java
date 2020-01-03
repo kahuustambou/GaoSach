@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,6 @@ import com.example.gaosach.Model.Request;
 import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.ViewHolder.CartAdapter;
 import com.example.gaosach.ViewHolder.CartViewHolder;
-import com.google.android.gms.location.places.Place;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,10 +41,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Common.nextIntent;
+import static com.example.gaosach.Common.Validator.isAddress;
+import static com.example.gaosach.Common.Validator.isEmpty;
+import static com.example.gaosach.Common.Validator.isPhoneNumber;
 import static com.example.gaosach.ForgotPassword.sendNotification;
 
 public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
@@ -60,11 +64,11 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
     CartAdapter adapter;
 
     APIService mService;
-    Place shippingAddress;
     private String address;
+    private boolean isValidAddress;
+    private MaterialEditText edtAddress;
 
     RelativeLayout rootLayout;
-
 
 
     @Override
@@ -77,7 +81,6 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         super.onCreate(savedInstanceState);
 
         //add code before setContentview method
-
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/BreeSerif.otf")
                 .setFontAttrId(R.attr.fontPath)
@@ -86,11 +89,13 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
         setContentView(R.layout.activity_cart);
 
+        isValidAddress = false;
+        edtAddress = findViewById(R.id.edtAddress);
+
         //init service
         mService = Common.getFCMService();
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
-
 
         //firebase
         database = FirebaseDatabase.getInstance();
@@ -116,14 +121,11 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                     showAlerDialog();
                 else
                     Toast.makeText(Cart.this, "Giỏ hàng của bạn trống", Toast.LENGTH_SHORT).show();
-
             }
 
         });
 
         loadListRice();
-
-
     }
 
 //    @Override
@@ -143,52 +145,62 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 //
 //    }
 
-
-
-
-
     private void showAlerDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
-        alertDialog.setTitle("Thêm một bước");
-        alertDialog.setMessage("Nhập địa chỉ của bạn: ");
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Cart.this);
+        builder.setTitle("Thêm một bước");
+        builder.setMessage("Nhập địa chỉ của bạn: ");
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
-        final MaterialEditText edtAddress = (MaterialEditText) order_address_comment.findViewById(R.id.edtAddress);
-
-
-        final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
-
-        //radio
-        final RadioButton rdiHomeAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiHomeAddress);
+        final View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
+        final MaterialEditText edtComment = order_address_comment.findViewById(R.id.edtComment);
+        final RadioButton rdiHomeAddress = order_address_comment.findViewById(R.id.rdiHomeAddress);
 
         //su kien cho radio
         rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
                 if (b) {
                     if (Common.currentUser.getHomeAddress() != null ||
                             !TextUtils.isEmpty(Common.currentUser.getHomeAddress())) {
                         address = Common.currentUser.getHomeAddress();
-
                     }
-
-
                 }
-
             }
         });
 
-
-        alertDialog.setView(order_address_comment);
-        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
-
-        alertDialog.setPositiveButton("GỬI", new DialogInterface.OnClickListener() {
+        builder.setView(order_address_comment);
+        builder.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+        builder.setPositiveButton("GỬI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // tao request moi
+            }
+        });
 
+        builder.setNegativeButton("KHÔNG", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtAddress = order_address_comment.findViewById(R.id.edtAddress);
+                address = edtAddress.getText().toString().trim();
+                if (isEmpty(address)) {
+                    edtAddress.setError("Vui lòng nhập địa chỉ hợp lệ.");
+                    return;
+                }
+
+//                if (!isAddress(address)) {
+//                    edtAddress.setError("Vui lòng nhập địa chỉ hợp lệ.");
+//                    return;
+//                }
+
+                // tao request moi
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
@@ -197,9 +209,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                         edtComment.getText().toString(),
                         "0",//trang thái
                         cart
-
                 );
-
 
                 //submit den firebase
                 // chung ta su dung systerm.current den kry
@@ -214,18 +224,11 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 nextIntent = new Intent(getApplicationContext(), OrderStatus.class);
                 Notification notification = new Notification("Gạo Việt", "Bạn có một đơn hàng mới " + order_number);
                 sendNotification(Cart.this, null, notification, true);
-                Toast.makeText(Cart.this, "Cám ơn bạn đã đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Cart.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
                 Intent move = new Intent(Cart.this, Home.class);
                 startActivity(move);
             }
         });
-        alertDialog.setNegativeButton("KHÔNG", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialog.show();
     }
 
     private void loadListRice() {

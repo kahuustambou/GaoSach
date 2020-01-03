@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Rating;
@@ -39,6 +38,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.example.gaosach.Common.Common.INSERT_RICE_ID;
+import static com.example.gaosach.Common.Common.currentUser;
 
 public class RiceDetail extends AppCompatActivity implements RatingDialogListener {
 
@@ -82,7 +84,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View view) {
                 Intent intent= new Intent(RiceDetail.this,ShowComment.class);
-                intent.putExtra(Common.INSERT_RICE_ID,riceId);
+                intent.putExtra(INSERT_RICE_ID,riceId);
                 startActivity(intent);
 
 
@@ -131,7 +133,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
-        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        fab.setCount(new Database(this).getCountCart(currentUser.getPhone()));
 
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +148,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View view) {
                 new Database(getBaseContext()).addToCart(new Order(
-                        Common.currentUser.getPhone(),
+                        currentUser.getPhone(),
                         riceId,
                         currentRice.getName(),
                         numberButton.getNumber(),
@@ -267,7 +269,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        fab.setCount(new Database(this).getCountCart(currentUser.getPhone()));
         if(adapter!=null)
             adapter.startListening();
     }
@@ -277,7 +279,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
         //lay đanh gia ve firebase
 
-         final com.example.gaosach.Model.Rating rating= new Rating(Common.currentUser.getPhone(),
+         final com.example.gaosach.Model.Rating rating= new Rating(currentUser.getPhone(),
                 riceId,
                 String.valueOf(value),
                 comments);
