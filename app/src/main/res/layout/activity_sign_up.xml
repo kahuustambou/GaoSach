@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnSignUp"
         android:layout_marginTop="30dp"
-        android:text="Bạn có sẵn sàng tạo tài khoản? Đăng nhập"
+        android:text="Bạn đã có tài khoản? Đăng nhập"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="15dp"
