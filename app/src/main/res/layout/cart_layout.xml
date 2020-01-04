@@ -36,11 +36,11 @@
         </TextView>
     </RelativeLayout>
 
-
+s
     <LinearLayout
         android:id="@+id/view_foreground"
         android:background="@color/white"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
@@ -82,14 +82,14 @@
 
         </LinearLayout>
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-            android:layout_width="60dp"
+            android:layout_width="100dp"
             android:layout_height="30dp"
             android:id="@+id/btn_quantity"
             android:layout_margin="10dp"
             app:textSize="8sp"
             app:backGroundColor="@color/green"
             app:initialNumber="1"
-            app:finalNumber="20"
+            app:finalNumber="100"
 
 
             />

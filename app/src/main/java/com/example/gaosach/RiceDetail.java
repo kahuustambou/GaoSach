@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.gaosach.Common.Common;
 import com.example.gaosach.Database.Database;
 import com.example.gaosach.Model.Order;
 import com.example.gaosach.Model.Rating;
@@ -147,7 +148,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //                new Database(getBaseContext()).addToCart(new Order(
 //                        Common.currentUser.getPhone(),
 //                        riceId,
@@ -177,18 +178,18 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 }
 
                 Toast.makeText(RiceDetail.this, "Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-=======
-                new Database(getBaseContext()).addToCart(new Order(
-                        currentUser.getPhone(),
-                        riceId,
-                        currentRice.getName(),
-                        numberButton.getNumber(),
-                        currentRice.getPrice(),
-                        currentRice.getDiscount(),
-                        currentRice.getImage()
-                ));
-                Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
->>>>>>> 20dce53bb3137cca4176ed6ba35ce5ee6c856618
+
+//                new Database(getBaseContext()).addToCart(new Order(
+//                        currentUser.getPhone(),
+//                        riceId,
+//                        currentRice.getName(),
+//                        numberButton.getNumber(),
+//                        currentRice.getPrice(),
+//                        currentRice.getDiscount(),
+//                        currentRice.getImage()
+//                ));
+//                Toast.makeText(RiceDetail.this,"Thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
             }
         });
 //        btnCart.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -41,14 +40,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Common.nextIntent;
-import static com.example.gaosach.Common.Validator.isAddress;
 import static com.example.gaosach.Common.Validator.isEmpty;
-import static com.example.gaosach.Common.Validator.isPhoneNumber;
 import static com.example.gaosach.ForgotPassword.sendNotification;
 
 public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
@@ -195,10 +191,6 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                     return;
                 }
 
-//                if (!isAddress(address)) {
-//                    edtAddress.setError("Vui lòng nhập địa chỉ hợp lệ.");
-//                    return;
-//                }
 
                 // tao request moi
                 Request request = new Request(
