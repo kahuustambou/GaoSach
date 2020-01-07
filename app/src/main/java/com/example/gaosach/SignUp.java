@@ -89,7 +89,7 @@ public class SignUp extends AppCompatActivity {
                             Toast.makeText(SignUp.this, "Số điện thoại đã được đăng ký", Toast.LENGTH_SHORT).show();
                         } else {
                             mDialog.dismiss();
-                            User user = new User(fullName, phoneNumber, password, false, "");
+                            User user = new User(fullName, phoneNumber, password, false, "", "");
                             userReference.child(phoneNumber).setValue(user);
                             Toast.makeText(SignUp.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
 

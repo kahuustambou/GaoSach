@@ -8,19 +8,19 @@ public class User {
     private String phone;
     private String password;
     private String code;
-    private String homeAddress;
+    private String address;
     private boolean isStaff = false;
 
     public User() {
     }
 
-    public User(String name, String phone, String password, boolean isStaff, String code) {
+    public User(String name, String phone, String password, boolean isStaff, String code, String address) {
         this.name = name;
         this.phone = phone;
         this.password = password;
         this.isStaff = isStaff;
         this.code = code;
-
+        this.address = address;
     }
 
     public String getCode() {
@@ -63,12 +63,12 @@ public class User {
         this.isStaff = isStaff;
     }
 
-    public String getHomeAddress() {
-        return homeAddress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setHomeAddress(String homeAddress) {
-        this.homeAddress = homeAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Map<String, Object> toMap() {
@@ -79,6 +79,7 @@ public class User {
         result.put("password", password);
         result.put("code", code);
         result.put("isStaff", isStaff);
+        result.put("address", address);
         return result;
     }
 }

@@ -34,7 +34,7 @@ import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.Common.Validator.isPhoneNumber;
 
 public class Profile extends AppCompatActivity {
-    EditText edtFullName, edtPhoneNumber;
+    EditText edtFullName, edtPhoneNumber, edtAddress;
     Button btnUpdate;
     Typeface typeface;
     int contextCompat;
@@ -63,6 +63,7 @@ public class Profile extends AppCompatActivity {
 
         edtFullName = findViewById(R.id.edtFullName);
         edtPhoneNumber = findViewById(R.id.edtPhoneNumber);
+        edtAddress = findViewById(R.id.edtAddress);
         btnUpdate = findViewById(R.id.btnUpdate);
 
         setUserInfo();
@@ -73,6 +74,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View v) {
                 String fullName = edtFullName.getText().toString().trim();
                 String phoneNumber = edtPhoneNumber.getText().toString().trim();
+                String address = edtAddress.getText().toString().trim();
                 if (checkValidInputs(fullName, phoneNumber)) {
                     try {
                         User user = new User();
@@ -81,6 +83,7 @@ public class Profile extends AppCompatActivity {
                         user.setPassword(currentUser.getPassword());
                         user.setName(fullName);
                         user.setPhone(phoneNumber);
+                        user.setAddress(address);
                         updateUser(user, Profile.this, null, null);
                     } catch (Exception exception) {
                         Log.d("loineh", exception.getMessage());
@@ -93,6 +96,7 @@ public class Profile extends AppCompatActivity {
     private void setUserInfo() {
         edtFullName.setText(currentUser.getName());
         edtPhoneNumber.setText(currentUser.getPhone());
+        edtAddress.setText(currentUser.getAddress());
     }
 
     private void setEditable(boolean isEnable) {
