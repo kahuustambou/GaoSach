@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="300dp"
-                android:text="Hãy liên hệ với chung tôi:"
+                android:text="Hãy liên hệ với chúng tôi:"
                 android:textColor="@color/btnSignUp"
                 android:textSize="30dp"
                 android:textStyle="italic" />

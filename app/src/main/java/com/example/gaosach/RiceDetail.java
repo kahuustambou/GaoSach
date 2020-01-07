@@ -165,7 +165,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                             Common.currentUser.getPhone(),
                             riceId,
                             currentRice.getName(),
-                            "1",
+                            numberButton.getNumber(),
                             currentRice.getPrice(),
                             currentRice.getDiscount(),
                             currentRice.getImage()

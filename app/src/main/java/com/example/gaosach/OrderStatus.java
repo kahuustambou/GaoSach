@@ -10,12 +10,9 @@ import com.example.gaosach.Common.Common;
 import com.example.gaosach.Model.Request;
 import com.example.gaosach.ViewHolder.OrderViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,12 +84,18 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(adapter.getItem(position).getStatus().equals("0"))
-                            deleteOrder(adapter.getRef(position).getKey());
+                        if(adapter.getItem(position).getStatus().equals("0")) {
+//                            deleteOrder(adapter.getRef(position).getKey());
+                            Toast.makeText(OrderStatus.this,"Đơn hàng đã bị hủy",Toast.LENGTH_SHORT).show();
+
+                        }
+
+
                         else
                             Toast.makeText(OrderStatus.this,"Bạn không thể hủy đơn hàng này",Toast.LENGTH_SHORT).show();
 
                     }
+
                 });
                 viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,31 +109,33 @@ public class OrderStatus extends AppCompatActivity {
                 });
 
             }
+
         };
 
         recyclerView.setAdapter(adapter);
 
     }
 
-    private void deleteOrder(final String key) {
-        requests.child(key)
-                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(OrderStatus.this,new StringBuilder("Đơn hàng ")
-                .append(key)
-                .append("đã bị hủy").toString(),Toast.LENGTH_SHORT).show();
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(OrderStatus.this,e.getMessage(),Toast.LENGTH_SHORT).show();
 
-            }
-        });
-
-    }
+//    private void deleteOrder(final String key) {
+//        requests.child(key).setValue(key).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Toast.makeText(OrderStatus.this,new StringBuilder("Đơn hàng ")
+//                .append(key)
+//                .append("đã bị hủy").toString(),Toast.LENGTH_SHORT).show();
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(OrderStatus.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//
+//    }
 
 
 

@@ -2,8 +2,6 @@ package com.example.gaosach.Common;
 
 import android.content.Intent;
 
-import com.example.gaosach.Home;
-import com.example.gaosach.MainActivity;
 import com.example.gaosach.Model.Request;
 import com.example.gaosach.Model.User;
 import com.example.gaosach.Remote.APIService;
@@ -40,8 +38,10 @@ public class Common {
             return "Đặt hàng";
         else if (status.equals("1"))
             return "Đang trên đường giao";
+        else if(status.equals("2"))
+            return "Đã giao hàng";
         else
-            return "Giao hàng";
+            return "Hủy đơn hàng thành công";
     }
 
     public static String getDate(Long time) {
