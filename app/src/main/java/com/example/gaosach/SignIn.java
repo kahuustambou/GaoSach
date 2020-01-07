@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gaosach.Common.Common;
+import com.example.gaosach.Model.Rating;
 import com.example.gaosach.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +30,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Common.PASSWORD_KEY;
+import static com.example.gaosach.Common.Common.RATING_TIME;
 import static com.example.gaosach.Common.Common.USER_KEY;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.Common.Validator.isPassword;
@@ -210,6 +212,7 @@ public class SignIn extends AppCompatActivity {
                         }
 
                         if (isClickedSignIn) {
+                            Paper.book().write(RATING_TIME, 0);
                             // Navigate to Home
                             startActivity(new Intent(context, Home.class));
                             finish();

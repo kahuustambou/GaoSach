@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -40,9 +41,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.example.gaosach.Common.Common.RATING_TIME;
+import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Common.nextIntent;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.ForgotPassword.sendNotification;
@@ -62,7 +67,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
     APIService mService;
     private String address;
     private boolean isValidAddress;
-    private MaterialEditText edtAddress;
+    private MaterialEditText edtAddress, edtComment;
 
     RelativeLayout rootLayout;
 
@@ -86,12 +91,13 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         setContentView(R.layout.activity_cart);
 
         isValidAddress = false;
-        edtAddress = findViewById(R.id.edtAddress);
+//        edtAddress = findViewById(R.id.edtAddress);
 
         //init service
         mService = Common.getFCMService();
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        Paper.init(this);
 
         //firebase
         database = FirebaseDatabase.getInstance();
@@ -148,17 +154,23 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
         LayoutInflater inflater = this.getLayoutInflater();
         final View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
-        final MaterialEditText edtComment = order_address_comment.findViewById(R.id.edtComment);
         final RadioButton rdiHomeAddress = order_address_comment.findViewById(R.id.rdiHomeAddress);
+        edtComment = order_address_comment.findViewById(R.id.edtComment);
+        edtAddress = order_address_comment.findViewById(R.id.edtAddressCart);
+        address = Common.currentUser.getAddress();
+        if(!isEmpty(address)) {
+            edtAddress.setEnabled(false);
+            edtAddress.setText(address);
+        }
 
         //su kien cho radio
         rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if (Common.currentUser.getHomeAddress() != null ||
-                            !TextUtils.isEmpty(Common.currentUser.getHomeAddress())) {
-                        address = Common.currentUser.getHomeAddress();
+                    if (address != null ||
+                            !TextUtils.isEmpty(address)) {
+                        address = Common.currentUser.getAddress();
                     }
                 }
             }
@@ -184,21 +196,19 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtAddress = order_address_comment.findViewById(R.id.edtAddress);
-                address = edtAddress.getText().toString().trim();
-                if (isEmpty(address)) {
-                    edtAddress.setError("Vui lòng nhập địa chỉ hợp lệ.");
+                String comment = edtComment.getText().toString();
+                if(isEmpty(edtAddress.getText().toString().trim())) {
+                    edtAddress.setError("Vui lòng nhập địa chỉ hoặc cập nhật trong thông tin cá nhân.");
                     return;
                 }
-
 
                 // tao request moi
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        edtAddress.getText().toString(),
+                        address,
                         txtTotalPrice.getText().toString(),
-                        edtComment.getText().toString(),
+                        comment,
                         "0",//trang thái
                         cart
                 );
@@ -217,6 +227,8 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 Notification notification = new Notification("Gạo Việt", "Bạn có một đơn hàng mới " + order_number);
                 sendNotification(Cart.this, null, notification, true);
                 Toast.makeText(Cart.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                int ratingTime = Paper.book().read(RATING_TIME);
+                Paper.book().write(RATING_TIME, ++ratingTime);
                 Intent move = new Intent(Cart.this, Home.class);
                 startActivity(move);
             }

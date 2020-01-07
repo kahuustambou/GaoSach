@@ -41,7 +41,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtFullName"
@@ -50,6 +51,7 @@
             android:background="@drawable/reg_edtext_style"
             android:inputType="textEmailAddress"
             android:padding="18dp"
+            android:hint="Họ Tên"
             android:text="Nhập Họ Tên"></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,7 +85,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtPhoneNumber"
@@ -92,7 +95,32 @@
             android:background="@drawable/reg_edtext_style"
             android:inputType="textPhonetic"
             android:padding="18dp"
+            android:hint="Số điện thoại"
             android:text="Nhập số điện thoại">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phoneNumber"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reg_edtext_style"
+            android:inputType="textPhonetic"
+            android:padding="18dp"
+            android:hint="Địa chỉ"
+            android:text="Nhập địa chỉ">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -101,7 +129,7 @@
         android:id="@+id/btnUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/phoneNumber"
+        android:layout_below="@+id/address"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="8dp"
