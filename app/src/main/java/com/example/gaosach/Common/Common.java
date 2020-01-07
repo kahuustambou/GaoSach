@@ -21,6 +21,7 @@ public class Common {
     public static Request currentRequest;
     public static final String USER_KEY = "User";
     public static final String PASSWORD_KEY = "Password";
+    public static final String RATING_TIME = "ratingTime";
     public static final String DELETE = "Delete";
     public static String PHONE_TEXT = "userPhone";
     public static final String INSERT_RICE_ID = "RiceId";

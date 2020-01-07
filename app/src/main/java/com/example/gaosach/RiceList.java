@@ -99,7 +99,7 @@ public class RiceList extends AppCompatActivity {
             }
         });
 
-        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+//        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         swipeRefreshLayout= (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,

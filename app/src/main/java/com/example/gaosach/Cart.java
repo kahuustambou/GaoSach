@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -40,9 +41,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.example.gaosach.Common.Common.RATING_TIME;
 import static com.example.gaosach.Common.Common.nextIntent;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.ForgotPassword.sendNotification;
@@ -92,6 +96,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         mService = Common.getFCMService();
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        Paper.init(this);
 
         //firebase
         database = FirebaseDatabase.getInstance();
@@ -217,6 +222,8 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 Notification notification = new Notification("Gạo Việt", "Bạn có một đơn hàng mới " + order_number);
                 sendNotification(Cart.this, null, notification, true);
                 Toast.makeText(Cart.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                int ratingTime = Paper.book().read(RATING_TIME);
+                Paper.book().write(RATING_TIME, ++ratingTime);
                 Intent move = new Intent(Cart.this, Home.class);
                 startActivity(move);
             }

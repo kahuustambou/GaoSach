@@ -1,8 +1,12 @@
 package com.example.gaosach;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -42,6 +46,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Common.INSERT_RICE_ID;
+import static com.example.gaosach.Common.Common.RATING_TIME;
 import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.RiceList.getDotPrice;
@@ -96,6 +101,9 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 startActivity(intent);
             }
         });
+
+        Paper.init(this);
+
         //firebase
         database = FirebaseDatabase.getInstance();
         rices = database.getReference("Rices");
@@ -186,10 +194,10 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
                 if (count != 0) {
                     float grade = (5 * sum) / (5 * count);
-                    txtFeedBackAmount.setText(String.valueOf((int)count));
+                    txtFeedBackAmount.setText(String.valueOf((int) count));
                     txtGrade.setText(String.valueOf(grade));
                     float surplus = grade % 10;
-                    if(surplus >= 7) {
+                    if (surplus >= 7) {
                         grade = grade + 1 - surplus / 10;
                     }
 
@@ -207,7 +215,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     }
 
     private void showRatingDialog() {
-        new AppRatingDialog.Builder()
+        AppRatingDialog.Builder dialog = new AppRatingDialog.Builder()
                 .setPositiveButtonText("Gửi đi")
                 .setNegativeButtonText("Hủy bỏ")
                 .setNoteDescriptions(Arrays.asList("Rất tệ", "Không tốt", "Khá tốt", "Rất tốt", "Xuất sắc"))
@@ -220,9 +228,9 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 .setHintTextColor(R.color.green)
                 .setCommentTextColor(android.R.color.black)
                 .setCommentBackgroundColor(R.color.white)
-                .setWindowAnimation(R.style.RatingDialogFadeAmin)
-                .create(RiceDetail.this)
-                .show();
+                .setWindowAnimation(R.style.RatingDialogFadeAmin);
+
+        dialog.create(RiceDetail.this).show();
     }
 
     private void getDetailFood(String riceId) {
@@ -263,6 +271,15 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
     @Override
     public void onPositiveButtonClicked(int value, String comments) {
+        // Check if user have booked before rating
+        int ratingTime = Paper.book().read(RATING_TIME);
+        if(ratingTime == 0) {
+            Toast.makeText(RiceDetail.this, "Vui lòng đặt hàng trước khi đánh giá.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Paper.book().write(RATING_TIME, --ratingTime);
+
         //lay đanh gia ve firebase
         final com.example.gaosach.Model.Rating rating = new Rating(currentUser.getPhone(),
                 riceId,
