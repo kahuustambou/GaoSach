@@ -1,17 +1,19 @@
 package com.example.gaosach;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
@@ -38,9 +40,6 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.util.Arrays;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -51,7 +50,7 @@ import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.RiceList.getDotPrice;
 
-public class RiceDetail extends AppCompatActivity implements RatingDialogListener {
+public class RiceDetail extends AppCompatActivity implements RatingDialogListener, AdapterView.OnItemSelectedListener {
 
     TextView rice_name, rice_price, rice_description;
     ImageView rice_image;
@@ -60,6 +59,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     CounterFab btnCart;
     ElegantNumberButton numberButton;
     RatingBar ratingBar;
+    Spinner dropUnits;
 
     String riceId = "";
     FirebaseDatabase database;
@@ -68,6 +68,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     Rice currentRice;
     TextView txtShowComment, txtFeedBackAmount, txtReviews, txtGrade;
     CounterFab fab;
+    String finalPrice, unit;
 
     FirebaseRecyclerAdapter<Rice, RiceViewHolder> adapter;
 
@@ -92,6 +93,14 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
         txtReviews = findViewById(R.id.txtReviews);
         txtReviews.setText("Đánh giá");
         txtGrade = findViewById(R.id.txtGrade);
+        dropUnits = findViewById(R.id.dropUnits);
+        String[] items = new String[]{"/kg", "/2kg/bich", "/5kg/bich"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropUnits.setAdapter(adapter);
+        dropUnits.setOnItemSelectedListener(this);
+
         txtShowComment = findViewById(R.id.txtShowComment);
         txtShowComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,16 +159,15 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                             Common.currentUser.getPhone(),
                             riceId,
                             currentRice.getName(),
-                            "1",
-                            currentRice.getPrice(),
+                            numberButton.getNumber(),
+                            finalPrice,
                             currentRice.getDiscount(),
+//                            dropUnits.getSelectedItem().toString(),
+//                            "2kg/bich",
                             currentRice.getImage()
                     ));
                 } else {
-
                     new Database(getBaseContext()).increaseCart(Common.currentUser.getPhone(), riceId);
-
-
                 }
             }
         });
@@ -176,6 +184,29 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             getDetailFood(riceId);
             getRatingRice(riceId);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+        switch (position) {
+            case 0:
+                finalPrice = currentRice.getPrice();
+                break;
+            case 1:
+                int price2Bags = Integer.valueOf(currentRice.getPrice()) * 2 * Integer.valueOf(numberButton.getNumber());
+                finalPrice = String.valueOf(price2Bags);
+                break;
+            case 2:
+                int price5Bags = Integer.valueOf(currentRice.getPrice()) * 5 * Integer.valueOf(numberButton.getNumber());
+                finalPrice = String.valueOf(price5Bags);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // TODO Auto-generated method stub
     }
 
     private void getRatingRice(String riceId) {
@@ -238,13 +269,14 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentRice = dataSnapshot.getValue(Rice.class);
+                finalPrice = currentRice.getPrice();
 
                 //lay image
                 Picasso.with(getBaseContext()).load(currentRice.getImage())
                         .into(rice_image);
 
                 collapsingToolbarLayout.setTitle(currentRice.getName());
-                rice_price.setText(String.format("%s /kg", getDotPrice(currentRice.getPrice())));
+                rice_price.setText(getDotPrice(currentRice.getPrice()));
                 rice_name.setText(currentRice.getName());
                 rice_description.setText(currentRice.getDescription());
             }
@@ -273,7 +305,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
     public void onPositiveButtonClicked(int value, String comments) {
         // Check if user have booked before rating
         int ratingTime = Paper.book().read(RATING_TIME);
-        if(ratingTime == 0) {
+        if (ratingTime == 0) {
             Toast.makeText(RiceDetail.this, "Vui lòng đặt hàng trước khi đánh giá.", Toast.LENGTH_SHORT).show();
             return;
         }

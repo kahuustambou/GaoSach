@@ -7,6 +7,7 @@ public class Order {
     private String Quantity;
     private String Price;
     private String Discount;
+//    private String Unit;
     private String Image;
 
     public Order() {
@@ -19,6 +20,7 @@ public class Order {
         Quantity = quantity;
         Price = price;
         Discount = discount;
+//        Unit = unit;
         Image = image;
     }
 
@@ -77,4 +79,12 @@ public class Order {
     public void setImage(String image) {
         Image = image;
     }
+
+//    public String getUnit() {
+//        return Unit;
+//    }
+//
+//    public void setUnit(String unit) {
+//        Unit = unit;
+//    }
 }
