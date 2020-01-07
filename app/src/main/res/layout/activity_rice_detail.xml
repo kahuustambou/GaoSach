@@ -126,13 +126,13 @@
                         android:id="@+id/layout_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="14dp">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_weight="2"
+                            android:layout_weight="0.5"
                             android:text="₫"
                             android:textColor="@color/red"
                             android:textSize="18dp" />
@@ -142,36 +142,23 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="9"
-                            android:padding="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
                             android:text="1,000"
                             android:textColor="@color/red"
                             android:textSize="18dp"
                             android:textStyle="bold">
 
                         </TextView>
-
-                        <TextView
-
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="23"
-                            android:padding="12dp"
-                            android:text="/kg"
-                            android:textColor="@color/red"
-                            android:textSize="18dp"
-                            android:textStyle="bold">
-
-                        </TextView>
-
                     </LinearLayout>
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                         android:id="@+id/number_button"
                         android:layout_width="100dp"
-                        android:layout_height="30dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="18dp"
+                        android:layout_marginBottom="8dp"
                         app:backGroundColor="@color/green"
                         app:finalNumber="20"
                         app:initialNumber="1"

@@ -272,6 +272,36 @@ public class RiceList extends AppCompatActivity {
                 });
     }
 
+    public static String getDotPrice(String oldPrice) {
+        int count = 0;
+        double integer, surplus;
+        double currentPrice = Double.valueOf(oldPrice);
+        String price;
+        do {
+            count ++;
+            integer = currentPrice / 1000;
+            surplus = currentPrice % 1000;
+            currentPrice = integer;
+        } while(currentPrice / 1000 > 1000);
+
+        if(surplus > 0) {
+            while(count != 1) {
+                surplus *= 1000;
+                count --;
+            }
+
+            price = (int)integer + "." + (int)surplus;
+        } else {
+            price = String.valueOf((int)integer);
+            while(count > 0) {
+                count --;
+                price += ".000";
+            }
+        }
+
+        return price;
+    }
+
     private void loadListRice(String categoryId) {
         adapter = new FirebaseRecyclerAdapter<Rice, RiceViewHolder>(
                 Rice.class,
@@ -282,7 +312,7 @@ public class RiceList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final RiceViewHolder viewHolder, final Rice model, final int position) {
                 viewHolder.rice_name.setText(model.getName());
-                viewHolder.rice_price.setText(String.format("%s /kg",model.getPrice().toString()));
+                viewHolder.rice_price.setText(String.format("%s /kg", getDotPrice(model.getPrice())));
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
 

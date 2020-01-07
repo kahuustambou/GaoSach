@@ -44,6 +44,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import static com.example.gaosach.Common.Common.INSERT_RICE_ID;
 import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Validator.isEmpty;
+import static com.example.gaosach.RiceList.getDotPrice;
 
 public class RiceDetail extends AppCompatActivity implements RatingDialogListener {
 
@@ -187,6 +188,11 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                     float grade = (5 * sum) / (5 * count);
                     txtFeedBackAmount.setText(String.valueOf((int)count));
                     txtGrade.setText(String.valueOf(grade));
+                    float surplus = grade % 10;
+                    if(surplus >= 7) {
+                        grade = grade + 1 - surplus / 10;
+                    }
+
                     ratingBar.setRating(grade);
                 }
 
@@ -230,7 +236,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                         .into(rice_image);
 
                 collapsingToolbarLayout.setTitle(currentRice.getName());
-                rice_price.setText(currentRice.getPrice());
+                rice_price.setText(String.format("%s /kg", getDotPrice(currentRice.getPrice())));
                 rice_name.setText(currentRice.getName());
                 rice_description.setText(currentRice.getDescription());
             }
