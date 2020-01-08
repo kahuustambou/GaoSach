@@ -7,20 +7,23 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.gaosach.Common.Common;
+import com.example.gaosach.Model.Notification;
 import com.example.gaosach.Model.Request;
 import com.example.gaosach.ViewHolder.OrderViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.example.gaosach.Common.Common.convertCodeToColorStatus;
+import static com.example.gaosach.Common.Common.nextIntent;
+import static com.example.gaosach.Common.Common.currentContext;
+import static com.example.gaosach.ForgotPassword.sendNotification;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -30,12 +33,6 @@ public class OrderStatus extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference requests;
-
-
-
-
-
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -52,7 +49,7 @@ public class OrderStatus extends AppCompatActivity {
                 .build());
         setContentView(R.layout.activity_order_status);
 
-
+        currentContext = this;
 
         //firebase
         database= FirebaseDatabase.getInstance();
@@ -67,7 +64,7 @@ public class OrderStatus extends AppCompatActivity {
     }
 
 
-    private void loadOrders(String phone) {
+    private void loadOrders(final String phone) {
         adapter= new FirebaseRecyclerAdapter<Request, OrderViewHolder>(
                 Request.class,
                 R.layout.order_layout,
@@ -77,22 +74,35 @@ public class OrderStatus extends AppCompatActivity {
 
         ) {
             @Override
-            protected void populateViewHolder(OrderViewHolder viewHolder, final Request model, final int position) {
+            protected void populateViewHolder(final OrderViewHolder viewHolder, final Request model, final int position) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderStatus.setTextColor(convertCodeToColorStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
 //                viewHolder.txtOrderPhone.setText(model.getPhone());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
                 viewHolder.txtOrderDate.setText(Common.getDate(Long.parseLong(adapter.getRef(position).getKey())));
                 viewHolder.btn_cancel.setOnClickListener(new View.OnClickListener() {
+
+
                     @Override
                     public void onClick(View v) {
-                        if(adapter.getItem(position).getStatus().equals("0"))
-                            deleteOrder(adapter.getRef(position).getKey());
+                        if(adapter.getItem(position).getStatus().equals("0")) {
+//                            deleteOrder(adapter.getRef(position).getKey());
+                            nextIntent = new Intent(OrderStatus.this, OrderStatus.class);
+//                            nextIntent.putExtra("status", "Bi huy");
+                            Notification notification = new Notification("Gạo Việt", "Đơn hàng " + viewHolder.txtOrderId.getText().toString() + " đã bị hủy.");
+                            sendNotification(OrderStatus.this, null, notification, true);
+                            Toast.makeText(OrderStatus.this,"Đơn hàng đã bị hủy",Toast.LENGTH_SHORT).show();
+
+                        }
+
+
                         else
                             Toast.makeText(OrderStatus.this,"Bạn không thể hủy đơn hàng này",Toast.LENGTH_SHORT).show();
 
                     }
+
                 });
                 viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,31 +116,33 @@ public class OrderStatus extends AppCompatActivity {
                 });
 
             }
+
         };
 
         recyclerView.setAdapter(adapter);
 
     }
 
-    private void deleteOrder(final String key) {
-        requests.child(key)
-                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(OrderStatus.this,new StringBuilder("Đơn hàng ")
-                .append(key)
-                .append("đã bị hủy").toString(),Toast.LENGTH_SHORT).show();
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(OrderStatus.this,e.getMessage(),Toast.LENGTH_SHORT).show();
 
-            }
-        });
-
-    }
+//    private void deleteOrder(final String key) {
+//        requests.child(key).setValue(key).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Toast.makeText(OrderStatus.this,new StringBuilder("Đơn hàng ")
+//                .append(key)
+//                .append("đã bị hủy").toString(),Toast.LENGTH_SHORT).show();
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(OrderStatus.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//
+//    }
 
 
 

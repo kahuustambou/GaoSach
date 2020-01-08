@@ -40,6 +40,8 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.util.Arrays;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -91,7 +93,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
         txtFeedBackAmount = findViewById(R.id.txtFeedBackAmount);
         txtReviews = findViewById(R.id.txtReviews);
-        txtReviews.setText("Đánh giá");
+        txtReviews.setText("Lượt");
         txtGrade = findViewById(R.id.txtGrade);
         dropUnits = findViewById(R.id.dropUnits);
         String[] items = new String[]{"/kg", "/2kg/bich", "/5kg/bich"};

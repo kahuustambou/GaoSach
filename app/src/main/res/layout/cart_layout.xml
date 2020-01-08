@@ -36,11 +36,11 @@
         </TextView>
     </RelativeLayout>
 
-s
+
     <LinearLayout
         android:id="@+id/view_foreground"
         android:background="@color/white"
-        android:layout_margin="4dp"
+        android:layout_margin="8dp"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"

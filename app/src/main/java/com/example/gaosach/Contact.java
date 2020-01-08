@@ -38,7 +38,7 @@ public class Contact extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SENDTO);
-                intent.putExtra("sms_body", "Chào mừng bạn đến với Gạo Việt");
+                intent.putExtra("sms_body", "Xin chào Gạo Việt!!!");
                 intent.setData(Uri.parse("sms:0982446871"));
                 startActivity(intent);
 
