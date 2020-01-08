@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.example.gaosach.RiceList.getDotPrice;
+
 public class SearchActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Rice, RiceViewHolder> adapter;
 
@@ -155,7 +157,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final RiceViewHolder viewHolder, final Rice model, final int position) {
                 viewHolder.rice_name.setText(model.getName());
-                viewHolder.rice_price.setText(String.format("%s /kg",model.getPrice().toString()));
+                viewHolder.rice_price.setText(String.format("%s /kg", getDotPrice(model.getPrice())));
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
 
@@ -207,7 +209,7 @@ public class SearchActivity extends AppCompatActivity {
                         favourites.setRiceImage(model.getImage());
                         favourites.setRiceMenuId(model.getMenuId());
                         favourites.setUserPhone(Common.currentUser.getPhone());
-                        favourites.setRicePrice(model.getPrice());
+                        favourites.setRicePrice(getDotPrice(model.getPrice()));
                         if(!locaDB.isFavourite(adapter.getRef(position).getKey(),Common.currentUser.getPhone()))
                         {
                             locaDB.addToFavourites(favourites);
@@ -264,7 +266,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(RiceViewHolder viewHolder, Rice model, int position) {
                 viewHolder.rice_name.setText(model.getName());
-                viewHolder.rice_price.setText(model.getPrice());
+                viewHolder.rice_price.setText(getDotPrice(model.getPrice()) + " /kg");
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
 

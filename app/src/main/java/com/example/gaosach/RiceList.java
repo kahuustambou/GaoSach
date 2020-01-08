@@ -227,7 +227,7 @@ public class RiceList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(RiceViewHolder viewHolder, Rice model, int position) {
                 viewHolder.rice_name.setText(model.getName());
-                viewHolder.rice_price.setText(model.getPrice());
+                viewHolder.rice_price.setText(getDotPrice(model.getPrice()) + " /kg");
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.rice_image);
 

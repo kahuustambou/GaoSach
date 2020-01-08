@@ -49,6 +49,7 @@ import static com.example.gaosach.Common.Common.RATING_TIME;
 import static com.example.gaosach.Common.Common.nextIntent;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.ForgotPassword.sendNotification;
+import static com.example.gaosach.RiceList.getDotPrice;
 
 public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
     RecyclerView recyclerView;
@@ -249,6 +250,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
         txtTotalPrice.setText(fmt.format(total));
+//        txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
     }
 
     @Override
@@ -274,6 +276,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
             txtTotalPrice.setText(fmt.format(total));
+//            txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
 
             //make snackbar
             Snackbar snackbar = Snackbar.make(rootLayout, name + "Xóa bỏ khỏi giỏ hàng", Snackbar.LENGTH_LONG);
@@ -296,6 +299,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
                     txtTotalPrice.setText(fmt.format(total));
+//                    txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
                 }
 
             });

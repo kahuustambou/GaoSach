@@ -13,6 +13,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.example.gaosach.RiceList.getDotPrice;
+
 class MyViewHolder extends RecyclerView.ViewHolder{
 
     public TextView name,quantity,price,discount;
@@ -51,7 +53,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<MyViewHolder>{
         Order order= myOrders.get(position);
         holder.name.setText(String.format("Tên : %s",order.getProductName()));
         holder.quantity.setText(String.format("Số lượng sản phẩm : %s",order.getQuantity()));
-        holder.price.setText(String.format("Giá sản phẩm: %s",order.getPrice()));
+        holder.price.setText(String.format("Giá sản phẩm: %s %s", getDotPrice(order.getPrice()), order.getUnit()));
         holder.discount.setText(String.format("Giảm giá : %s",order.getDiscount()));
 
 
