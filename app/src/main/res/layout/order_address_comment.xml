@@ -59,18 +59,18 @@
 
             </com.rengwuxian.materialedittext.MaterialEditText>
 
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/rdiHomeAddress"
-                    android:text="Thanh toán khi nhận hàng"
-                    android:textSize="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+<!--            <RadioGroup-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+<!--                <RadioButton-->
+<!--                    android:id="@+id/rdiHomeAddress"-->
+<!--                    android:text="Thanh toán khi nhận hàng"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                </RadioButton>
-            </RadioGroup>
+<!--                </RadioButton>-->
+<!--            </RadioGroup>-->
 
 
         </LinearLayout>

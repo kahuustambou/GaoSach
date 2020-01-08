@@ -5,13 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,13 +37,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.example.gaosach.Common.Common.RATING_TIME;
-import static com.example.gaosach.Common.Common.currentUser;
 import static com.example.gaosach.Common.Common.nextIntent;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.ForgotPassword.sendNotification;
@@ -154,7 +148,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
         LayoutInflater inflater = this.getLayoutInflater();
         final View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
-        final RadioButton rdiHomeAddress = order_address_comment.findViewById(R.id.rdiHomeAddress);
+//        final RadioButton rdiHomeAddress = order_address_comment.findViewById(R.id.rdiHomeAddress);
         edtComment = order_address_comment.findViewById(R.id.edtComment);
         edtAddress = order_address_comment.findViewById(R.id.edtAddressCart);
         address = Common.currentUser.getAddress();
@@ -163,18 +157,18 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
             edtAddress.setText(address);
         }
 
-        //su kien cho radio
-        rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (address != null ||
-                            !TextUtils.isEmpty(address)) {
-                        address = Common.currentUser.getAddress();
-                    }
-                }
-            }
-        });
+//        //su kien cho radio
+//        rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (b) {
+//                    if (address != null ||
+//                            !TextUtils.isEmpty(address)) {
+//                        address = Common.currentUser.getAddress();
+//                    }
+//                }
+//            }
+//        });
 
         builder.setView(order_address_comment);
         builder.setIcon(R.drawable.ic_shopping_cart_black_24dp);
@@ -244,12 +238,12 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         //tinh tong cong tien
 
         int total = 0;
+        List<Order> cart = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
 
         for (Order order : cart)
-            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+        total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
         Locale locale = new Locale("vie", "VN");
-//        NumberFormat fmt= NumberFormat.getCurrencyInstance();
-        NumberFormat fmt = NumberFormat.getNumberInstance();
+        NumberFormat fmt= NumberFormat.getNumberInstance();
 
 
         txtTotalPrice.setText(fmt.format(total));
@@ -274,7 +268,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
             for (Order item : orders)
                 total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("vie", "VN");
-            NumberFormat fmt = NumberFormat.getCurrencyInstance();
+            NumberFormat fmt = NumberFormat.getNumberInstance();
 
 
             txtTotalPrice.setText(fmt.format(total));
@@ -296,7 +290,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                     for (Order item : orders)
                         total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
                     Locale locale = new Locale("vie", "VN");
-                    NumberFormat fmt = NumberFormat.getCurrencyInstance();
+                    NumberFormat fmt = NumberFormat.getNumberInstance();
 
 
                     txtTotalPrice.setText(fmt.format(total));
