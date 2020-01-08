@@ -188,14 +188,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
+
                         android:orientation="horizontal">
 
                         <RatingBar
                             android:id="@+id/ratingBar"
-                            android:layout_width="wrap_content"
+                            android:layout_width="236dp"
                             android:layout_height="wrap_content"
                             android:isIndicator="true"
                             android:max="5"
@@ -215,15 +215,15 @@
                                 android:layout_marginTop="4dp"
                                 android:paddingBottom="2dp"
                                 android:gravity="center_horizontal|center_vertical"
-                                android:lineSpacingMultiplier="1.5"
+                                android:lineSpacingMultiplier="1"
                                 android:textColor="@color/custom_gray"
-                                android:textSize="18dp" />
+                                android:textSize="16dp" />
 
                             <TextView
                                 android:id="@+id/txtReviews"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:lineSpacingMultiplier="1.5"
+                                android:lineSpacingMultiplier="1"
                                 android:textColor="#858892"
                                 android:gravity="center_horizontal|center_vertical"
                                 android:textSize="16dp" />
@@ -234,10 +234,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="3dp"
-                            android:paddingLeft="4dp"
-                            android:lineSpacingMultiplier="1.5"
+                            android:paddingLeft="1dp"
+                            android:lineSpacingMultiplier="1"
                             android:textColor="@color/green"
-                            android:textSize="20dp" />
+                            android:textSize="16dp" />
                     </LinearLayout>
 
                     <TextView

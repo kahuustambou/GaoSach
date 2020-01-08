@@ -1,9 +1,11 @@
 package com.example.gaosach.Common;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.example.gaosach.Model.Request;
 import com.example.gaosach.Model.User;
+import com.example.gaosach.R;
 import com.example.gaosach.Remote.APIService;
 import com.example.gaosach.Remote.FCMRetroClient;
 import com.example.gaosach.Remote.RetrofitClient;
@@ -11,9 +13,12 @@ import com.example.gaosach.Remote.RetrofitClient;
 import java.util.Calendar;
 import java.util.Locale;
 
+import androidx.core.content.ContextCompat;
+
 public class Common {
     public static User currentUser;
     public static Intent nextIntent;
+    public static Context currentContext;
 
     public static String topicName = "News";
     public static Request currentRequest;
@@ -36,13 +41,24 @@ public class Common {
 
     public static String convertCodeToStatus(String status) {
         if (status.equals("0"))
-            return "Đặt hàng";
+            return "Đã đặt hàng";
         else if (status.equals("1"))
             return "Đang trên đường giao";
         else if(status.equals("2"))
             return "Đã giao hàng";
         else
-            return "Hủy đơn hàng thành công";
+            return "Hủy đơn hàng ";
+    }
+
+    public static int convertCodeToColorStatus(String status) {
+        if (status.equals("0"))
+            return ContextCompat.getColor(currentContext, R.color.green);
+        else if (status.equals("1"))
+            return ContextCompat.getColor(currentContext, R.color.black);
+        else if(status.equals("2"))
+            return ContextCompat.getColor(currentContext, R.color.pink);
+        else
+            return ContextCompat.getColor(currentContext, R.color.red);
     }
 
     public static String getDate(Long time) {

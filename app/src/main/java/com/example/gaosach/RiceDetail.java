@@ -1,12 +1,8 @@
 package com.example.gaosach;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -40,7 +36,6 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -90,7 +85,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
 
         txtFeedBackAmount = findViewById(R.id.txtFeedBackAmount);
         txtReviews = findViewById(R.id.txtReviews);
-        txtReviews.setText("Đánh giá");
+        txtReviews.setText("Lượt");
         txtGrade = findViewById(R.id.txtGrade);
         txtShowComment = findViewById(R.id.txtShowComment);
         txtShowComment.setOnClickListener(new View.OnClickListener() {
