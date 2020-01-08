@@ -228,7 +228,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                 if (count != 0) {
                     float grade = (5 * sum) / (5 * count);
                     txtFeedBackAmount.setText(String.valueOf((int) count));
-                    txtGrade.setText(String.valueOf(grade));
+                    txtGrade.setText(String.format("%.2f", grade));
                     float surplus = grade % 10;
                     if (surplus >= 7) {
                         grade = grade + 1 - surplus / 10;
