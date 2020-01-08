@@ -7,20 +7,20 @@ public class Order {
     private String Quantity;
     private String Price;
     private String Discount;
-//    private String Unit;
+    private String Unit;
     private String Image;
 
     public Order() {
     }
 
-    public Order(String userPhone, String productId, String productName, String quantity, String price, String discount, String image) {
+    public Order(String userPhone, String productId, String productName, String quantity, String price, String discount, String unit, String image) {
         UserPhone = userPhone;
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
-//        Unit = unit;
+        Unit = unit;
         Image = image;
     }
 
@@ -80,11 +80,11 @@ public class Order {
         Image = image;
     }
 
-//    public String getUnit() {
-//        return Unit;
-//    }
-//
-//    public void setUnit(String unit) {
-//        Unit = unit;
-//    }
+    public String getUnit() {
+        return Unit;
+    }
+
+    public void setUnit(String unit) {
+        Unit = unit;
+    }
 }

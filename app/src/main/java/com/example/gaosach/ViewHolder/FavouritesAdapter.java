@@ -61,7 +61,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder
                             "1",
                             favouritesList.get(position).getRicePrice(),
                             favouritesList.get(position).getRiceDiscount(),
-//                            "/kg",
+                            "/kg",
                             favouritesList.get(position).getRiceImage()
                     ));
                 } else {

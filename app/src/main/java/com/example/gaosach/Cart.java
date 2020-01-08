@@ -193,7 +193,6 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String comment = edtComment.getText().toString();
                 if(isEmpty(edtAddress.getText().toString().trim())) {
                     edtAddress.setError("Vui lòng nhập địa chỉ hoặc cập nhật trong thông tin cá nhân.");
                     return;
@@ -203,9 +202,9 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        address,
+                        edtAddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
-                        comment,
+                        edtComment.getText().toString(),
                         "0",//trang thái
                         cart
                 );

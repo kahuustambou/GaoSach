@@ -164,7 +164,7 @@ public class RiceDetail extends AppCompatActivity implements RatingDialogListene
                             numberButton.getNumber(),
                             finalPrice,
                             currentRice.getDiscount(),
-//                            dropUnits.getSelectedItem().toString(),
+                            dropUnits.getSelectedItem().toString(),
 //                            "2kg/bich",
                             currentRice.getImage()
                     ));

@@ -174,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
                                     "1",
                                     model.getPrice(),
                                     model.getDiscount(),
-//                                    "/kg",
+                                    "/kg",
                                     model.getImage()
                             ));
                         } else {
