@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 import com.example.gaosach.Model.Favourites;
 import com.example.gaosach.Model.Order;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database extends SQLiteAssetHelper {
-    private static final String DB_NAME = "RiceDB.db";
+    private static final String DB_NAME = "RicesDB.db";
     private static final int DB_VER = 2;
 
     public Database(Context context) {
@@ -55,7 +56,7 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = {"UserPhone", "ProductName", "ProductId", "Quantity", "Price", "Discount", "Image"};
+        String[] sqlSelect = {"UserPhone", "ProductName", "ProductId", "Quantity", "Price", "Discount", "Unit", "Image"};
         String sqlTable = "OrderDetail";
 
         qb.setTables(sqlTable);
@@ -71,6 +72,7 @@ public class Database extends SQLiteAssetHelper {
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
                         c.getString(c.getColumnIndex("Discount")),
+                        c.getString(c.getColumnIndex("Unit")),
                         c.getString(c.getColumnIndex("Image"))
 
                 ));
@@ -83,13 +85,14 @@ public class Database extends SQLiteAssetHelper {
 
     public void addToCart(Order order) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image) VALUES('%s','%s','%s','%s','%s','%s','%s');",
+        String query = String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Unit,Image) VALUES('%s','%s','%s','%s','%s','%s','%s','%s');",
                 order.getUserPhone(),
                 order.getProductId(),
                 order.getProductName(),
                 order.getQuantity(),
                 order.getPrice(),
                 order.getDiscount(),
+                order.getUnit(),
                 order.getImage());
         db.execSQL(query);
         db.close();
@@ -104,15 +107,22 @@ public class Database extends SQLiteAssetHelper {
 
     public int getCountCart(String userPhone) {
         int count = 0;
-        SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("SELECT COUNT(*) FROM OrderDetail Where UserPhone='%s'", userPhone);
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                count = cursor.getInt(0);
-            } while (cursor.moveToNext());
+        try {
+            SQLiteDatabase db = getReadableDatabase();
+            String query = String.format("SELECT COUNT(*) FROM OrderDetail Where UserPhone='%s'", userPhone);
+            Cursor cursor = db.rawQuery(null, null);
+            cursor = db.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+
+            db.close();
+        } catch (Exception exception) {
+            Log.d("--Message", "getCountCart: error");
         }
-        db.close();
+
         return count;
     }
 

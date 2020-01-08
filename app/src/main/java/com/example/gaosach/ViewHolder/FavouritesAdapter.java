@@ -21,6 +21,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.example.gaosach.RiceList.getDotPrice;
+
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder> {
 
     private Context context;
@@ -42,7 +44,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder
     @Override
     public void onBindViewHolder(@NonNull FavouritesViewHolder viewHolder, final int position) {
         viewHolder.rice_name.setText(favouritesList.get(position).getRiceName());
-        viewHolder.rice_price.setText(String.format("%s /kg", favouritesList.get(position).getRicePrice().toString()));
+        viewHolder.rice_price.setText(String.format("%s /kg", getDotPrice(favouritesList.get(position).getRicePrice())));
         Picasso.with(context).load(favouritesList.get(position).getRiceImage())
                 .into(viewHolder.rice_image);
 
@@ -61,6 +63,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesViewHolder
                             "1",
                             favouritesList.get(position).getRicePrice(),
                             favouritesList.get(position).getRiceDiscount(),
+                            "/kg",
                             favouritesList.get(position).getRiceImage()
                     ));
                 } else {

@@ -45,6 +45,7 @@ import static com.example.gaosach.Common.Common.RATING_TIME;
 import static com.example.gaosach.Common.Common.nextIntent;
 import static com.example.gaosach.Common.Validator.isEmpty;
 import static com.example.gaosach.ForgotPassword.sendNotification;
+import static com.example.gaosach.RiceList.getDotPrice;
 
 public class Cart extends AppCompatActivity implements RecycleItemTouchHelperListener {
     RecyclerView recyclerView;
@@ -85,7 +86,6 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         setContentView(R.layout.activity_cart);
 
         isValidAddress = false;
-//        edtAddress = findViewById(R.id.edtAddress);
 
         //init service
         mService = Common.getFCMService();
@@ -190,7 +190,6 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String comment = edtComment.getText().toString();
                 if(isEmpty(edtAddress.getText().toString().trim())) {
                     edtAddress.setError("Vui lòng nhập địa chỉ hoặc cập nhật trong thông tin cá nhân.");
                     return;
@@ -200,9 +199,9 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        address,
+                        edtAddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
-                        comment,
+                        edtComment.getText().toString(),
                         "0",//trang thái
                         cart
                 );
@@ -247,6 +246,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
         txtTotalPrice.setText(fmt.format(total));
+//        txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
     }
 
     @Override
@@ -272,6 +272,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
             txtTotalPrice.setText(fmt.format(total));
+//            txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
 
             //make snackbar
             Snackbar snackbar = Snackbar.make(rootLayout, name + "Xóa bỏ khỏi giỏ hàng", Snackbar.LENGTH_LONG);
@@ -294,6 +295,7 @@ public class Cart extends AppCompatActivity implements RecycleItemTouchHelperLis
 
 
                     txtTotalPrice.setText(fmt.format(total));
+//                    txtTotalPrice.setText(getDotPrice(String.valueOf(total)));
                 }
 
             });
